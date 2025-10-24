@@ -1,0 +1,245 @@
+/* Token input and button styles for predictions page */
+.token-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-top: 48px;
+	gap: 18px;
+}
+.token-input {
+	padding: 10px 18px;
+	font-size: 1.08em;
+	border-radius: 8px;
+	border: 1px solid #444;
+	background: #222;
+	color: #fff;
+	outline: none;
+	width: 260px;
+	transition: border 0.2s;
+}
+.token-input:focus {
+	border-color: #ffd700;
+}
+.btn-continuar {
+	padding: 10px 32px;
+	font-size: 1.08em;
+	font-weight: bold;
+	color: #fff;
+	background: #111;
+	border: 2px solid #fff;
+	border-radius: 8px;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+	transition: background 0.2s, color 0.2s;
+}
+.btn-continuar:hover {
+	background: #fff;
+	color: #111;
+	border: 2px solid #111;
+}
+/* Top navigation menu styles (shared by all pages) */
+nav {
+	width: 100%;
+	background: #181818;
+	border-bottom: 2px solid #222;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0.5em 0 0.5em 0;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+nav a {
+	color: #fff;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 1.08em;
+	margin: 0 22px;
+	padding: 6px 0;
+	transition: color 0.2s, border-bottom 0.2s;
+	border-bottom: 2px solid transparent;
+}
+nav a:hover, nav a.active {
+	color: #ffd700;
+	border-bottom: 2px solid #ffd700;
+}
+
+.col-nome {
+	width: 220px;
+	white-space: nowrap;
+/* Leaderboard table column styles */
+}
+.col-pontos {
+	white-space: nowrap;
+}
+.col-tiebreaker {
+	width: 60px;
+	white-space: nowrap;
+}
+
+.prize-header {
+	text-align: center;
+	background: #222;
+/* Prize header and medal styles for leaderboard */
+	color: #fff;
+	font-size: 1.1em;
+	padding: 10px 0;
+}
+.prize-group {
+	margin: 0 18px;
+}
+.prize-value.prize-gold {
+	font-weight: bold;
+	color: #ffd700;
+}
+.prize-value.prize-silver {
+	font-weight: bold;
+	color: #c0c0c0;
+}
+.prize-value.prize-bronze {
+	font-weight: bold;
+	color: #cd7f32;
+}
+@keyframes breakdown-fade-out {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+/* Animation for hiding breakdown row (fade out) */
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+}
+
+.breakdown-row {
+	animation: breakdown-fade-in 0.4s;
+	transition: background 0.3s;
+}
+/* Animation for showing breakdown row (fade in) */
+
+@keyframes breakdown-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+/* Main container for leaderboard page */
+	justify-content: flex-start;
+	min-height: 60vh;
+}
+
+#leaderboard-table {
+	margin: 32px auto;
+	width: 100%;
+	max-width: 600px;
+/* Leaderboard table layout and appearance */
+	background: var(--table-bg, #181818);
+	border-radius: 12px;
+	box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+	overflow: hidden;
+}
+
+.pos-col {
+	width: 60px;
+}
+.prize-badge {
+/* Position column style */
+	display: inline-block;
+	margin-left: 8px;
+	padding: 2px 8px;
+	border-radius: 12px;
+/* Medal badge styles for top 3 */
+	font-size: 0.9em;
+	font-weight: bold;
+	vertical-align: middle;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.prize-badge.gold {
+	background: linear-gradient(90deg, #FFD700 60%, #fffbe6 100%);
+	color: #222;
+	border: 1px solid #e6c200;
+}
+.prize-badge.silver {
+	background: linear-gradient(90deg, #C0C0C0 60%, #f5f5f5 100%);
+	color: #222;
+	border: 1px solid #b0b0b0;
+}
+.prize-badge.bronze {
+	background: linear-gradient(90deg, #cd7f32 60%, #f5e6d3 100%);
+	color: #222;
+	border: 1px solid #b06a2c;
+}
+/* Leaderboard row colors for top 3 positions */
+.gold-row {
+	background: linear-gradient(90deg, #FFD700 60%, #fffbe6 100%);
+	color: #222;
+	font-weight: bold;
+}
+.silver-row {
+	background: linear-gradient(90deg, #C0C0C0 60%, #f5f5f5 100%);
+	color: #222;
+	font-weight: bold;
+}
+.bronze-row {
+	background: linear-gradient(90deg, #cd7f32 60%, #f5e6d3 100%);
+	color: #222;
+	font-weight: bold;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #111;
+	color: #fff;
+}
+
+nav {
+		background: #222;
+		color: #fff;
+		padding: 1em;
+		display: flex;
+		gap: 1em;
+		justify-content: center;
+}
+
+nav a {
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+main {
+	padding: 2em;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 1em;
+	background: #222;
+	color: #fff;
+}
+
+th, td {
+	border: 1px solid #444;
+	padding: 0.5em;
+	text-align: center;
+}
+
+th {
+	background: #333;
+	color: #fff;
+}

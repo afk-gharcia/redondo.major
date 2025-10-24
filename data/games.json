@@ -1,0 +1,38 @@
+{
+  "stage_01": [
+    {"id": "stage_01_game_01", "home": 12, "away": 5},
+    {"id": "stage_01_game_02", "home": 27, "away": 18},
+    {"id": "stage_01_game_03", "home": 2, "away": 31},
+    {"id": "stage_01_game_04", "home": 9, "away": 24},
+    {"id": "stage_01_game_05", "home": 1, "away": 16},
+    {"id": "stage_01_game_06", "home": 8, "away": 21},
+    {"id": "stage_01_game_07", "home": 14, "away": 6},
+    {"id": "stage_01_game_08", "home": 19, "away": 25}
+  ],
+  "stage_02": [
+    {"id": "stage_02_game_01", "home": 3, "away": 7},
+    {"id": "stage_02_game_02", "home": 10, "away": 13},
+    {"id": "stage_02_game_03", "home": 20, "away": 23},
+    {"id": "stage_02_game_04", "home": 28, "away": 32},
+    {"id": "stage_02_game_05", "home": 4, "away": 17},
+    {"id": "stage_02_game_06", "home": 15, "away": 22},
+    {"id": "stage_02_game_07", "home": 26, "away": 29},
+    {"id": "stage_02_game_08", "home": 30, "away": 11}
+  ],
+  "stage_03": [
+    {"id": "stage_03_game_01", "home": 5, "away": 18},
+    {"id": "stage_03_game_02", "home": 6, "away": 31},
+    {"id": "stage_03_game_03", "home": 7, "away": 13},
+    {"id": "stage_03_game_04", "home": 8, "away": 21},
+    {"id": "stage_03_game_05", "home": 9, "away": 24},
+    {"id": "stage_03_game_06", "home": 10, "away": 23},
+    {"id": "stage_03_game_07", "home": 14, "away": 32},
+    {"id": "stage_03_game_08", "home": 19, "away": 25}
+  ],
+  "playoff": [
+  {"id": "playoff_game_01", "home": 11, "away": 16},
+  {"id": "playoff_game_02", "home": 15, "away": 23},
+  {"id": "playoff_game_03", "home": 22, "away": 2},
+  {"id": "playoff_game_04", "home": 31, "away": 1}
+  ]
+}
