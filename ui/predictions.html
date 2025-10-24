@@ -13,11 +13,73 @@
         <a href="predictions.html" class="active">Palpites</a>
         <a href="leaderboard.html">Leaderboard</a>
     </nav>
-    <main>
-        <div class="token-container">
-            <input type="text" class="token-input" placeholder="Digite seu token..." />
-            <button class="btn-continuar">Continuar</button>
-        </div>
-    </main>
+        <main>
+                <div class="token-container">
+                        <form id="token-form">
+                            <div class="token-form-group">
+                                <div class="token-input-group">
+                                    <div id="error-msg" class="hidden"></div>
+                                    <input type="text" class="token-input" id="token-input" placeholder="Digite seu token..." maxlength="5" required />
+                                </div>
+                                <button type="submit" class="btn-continuar">Continuar</button>
+                            </div>
+                        </form>
+                </div>
+            <div id="userId" class="hidden"></div>
+        </main>
+        <script>
+            const form = document.getElementById('token-form');
+            const tokenInput = document.getElementById('token-input');
+            const errorMsg = document.getElementById('error-msg');
+            const tokenContainer = document.querySelector('.token-container');
+            const userIdDiv = document.getElementById('userId');
+
+            function shake(element) {
+                element.classList.add('shake');
+                setTimeout(() => {
+                    element.classList.remove('shake');
+                }, 500);
+            }
+
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.style.display = 'block';
+                errorMsg.style.fontSize = '0.92em';
+                errorMsg.style.fontWeight = 'bold';
+                tokenInput.classList.add('error');
+                shake(tokenInput);
+                shake(errorMsg);
+            }
+
+            function hideError() {
+                errorMsg.style.display = 'none';
+                tokenInput.classList.remove('error');
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                hideError();
+                userIdDiv.style.display = 'none';
+                const token = tokenInput.value.trim().toUpperCase();
+                if (!token) return;
+                try {
+                    const res = await fetch('https://redondo-major.netlify.app/.netlify/functions/validateToken', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token })
+                    });
+                    const data = await res.json();
+                    if (data.valid) {
+                        tokenContainer.style.display = 'none';
+                        userIdDiv.textContent = `Seu ID: ${data.userId}`;
+                        userIdDiv.style.display = 'block';
+                    } else {
+                        showError('Token inválido ..');
+                    }
+                } catch (err) {
+                    showError('Erro de conexão com a API.');
+                }
+            });
+        </script>
 </body>
 </html>
