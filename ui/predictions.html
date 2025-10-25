@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Faça seus palpites para o Major de CS2.">
+    <meta name="description" content="Make your predictions for the CS2 Major Redondo.">
     <meta name="keywords" content="CS2, redondo, palpites, major, Counter-Strike">
     <title>Palpites</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/predictions.css">
+    <link rel="stylesheet" href="css/components/stage.css">
+    <link rel="stylesheet" href="css/components/game-row.css">
+    <link rel="stylesheet" href="css/components/token-input.css">
 </head>
 <body>
     <nav>
@@ -27,59 +31,73 @@
                 </div>
             <div id="userId" class="hidden"></div>
         </main>
-        <script>
-            const form = document.getElementById('token-form');
-            const tokenInput = document.getElementById('token-input');
-            const errorMsg = document.getElementById('error-msg');
-            const tokenContainer = document.querySelector('.token-container');
-            const userIdDiv = document.getElementById('userId');
+    <script type="module">
+        import { showUserDisplayName } from './js/components/userDisplayName.js';
+        import { loadMajorStages } from './js/predictions/loadMajorStages.js';
 
-            function shake(element) {
-                element.classList.add('shake');
-                setTimeout(() => {
-                    element.classList.remove('shake');
-                }, 500);
-            }
+        const form = document.getElementById('token-form');
+        const tokenInput = document.getElementById('token-input');
+        const errorMsg = document.getElementById('error-msg');
+        const tokenContainer = document.querySelector('.token-container');
+        const userIdDiv = document.getElementById('userId');
 
-            function showError(msg) {
-                errorMsg.textContent = msg;
-                errorMsg.style.display = 'block';
-                errorMsg.style.fontSize = '0.92em';
-                errorMsg.style.fontWeight = 'bold';
-                tokenInput.classList.add('error');
-                shake(tokenInput);
-                shake(errorMsg);
-            }
+        const savedUserId = localStorage.getItem('userId');
+        if (savedUserId) {
+            tokenContainer.style.display = 'none';
+            userIdDiv.style.display = 'block';
+            loadMajorStages();
+        }
 
-            function hideError() {
-                errorMsg.style.display = 'none';
-                tokenInput.classList.remove('error');
-            }
+        function shake(element) {
+            element.classList.add('shake');
+            setTimeout(() => {
+                element.classList.remove('shake');
+            }, 500);
+        }
 
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                hideError();
-                userIdDiv.style.display = 'none';
-                const token = tokenInput.value.trim().toUpperCase();
-                if (!token) return;
-                try {
-                    const res = await fetch('https://redondo-major.netlify.app/.netlify/functions/validateToken', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token })
-                    });
-                    const data = await res.json();
-                    if (data.valid) {
-                        tokenContainer.style.display = 'none';
-                        userIdDiv.textContent = `Seu ID: ${data.userId}`;
-                        userIdDiv.style.display = 'block';
-                    } else {
-                        showError('Token inválido ..');
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.style.display = 'block';
+            errorMsg.style.fontSize = '0.92em';
+            errorMsg.style.fontWeight = 'bold';
+            tokenInput.classList.add('error');
+            shake(tokenInput);
+            shake(errorMsg);
+        }
+
+        function hideError() {
+            errorMsg.style.display = 'none';
+            tokenInput.classList.remove('error');
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideError();
+            userIdDiv.style.display = 'none';
+            const token = tokenInput.value.trim().toUpperCase();
+            if (!token) return;
+            try {
+                const res = await fetch('https://redondo-major.netlify.app/.netlify/functions/validateToken', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if (data.valid) {
+                    tokenContainer.style.display = 'none';
+                    userIdDiv.style.display = 'block';
+                    localStorage.setItem('userId', data.userId);
+                    if (data.display_name) {
+                        localStorage.setItem('display_name', data.display_name);
                     }
-                } catch (err) {
-                    showError('Erro de conexão com a API.');
+                    loadMajorStages();
+                } else {
+                    showError('Token inválido ..');
                 }
-            });
-        </script>
+            } catch (err) {
+                showError('Erro de conexão com a API.');
+            }
+        });
+    </script>
 </body>
 </html>

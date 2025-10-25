@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Veja a classificação dos participantes e suas pontuações.">
+	<meta name="description" content="View the leaderboard and participants' scores for the CS2 Major Redondo.">
 	<meta name="keywords" content="CS2, redondo, leaderboard, classificação, major, Counter-Strike">
 	<title>Leaderboard</title>
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/leaderboard.css">
+	<link rel="stylesheet" href="css/components/stage.css">
+	<link rel="stylesheet" href="css/components/game-row.css">
 </head>
+
 <body>
 	<nav>
-	<a href="predictions.html">Palpites</a>
-	<a href="leaderboard.html" class="active">Leaderboard</a>
+		<a href="predictions.html">Palpites</a>
+		<a href="leaderboard.html" class="active">Leaderboard</a>
 	</nav>
 	<main>
 		<table id="leaderboard-table">
 			<thead>
 				<tr>
 					<th colspan="4" class="prize-header">
-						<span class="prize-group prize-gold">🥇 <span id="prize-first" class="prize-value prize-gold"></span></span>
-						<span class="prize-group prize-silver">🥈 <span id="prize-second" class="prize-value prize-silver"></span></span>
-						<span class="prize-group prize-bronze">🥉 <span id="prize-third" class="prize-value prize-bronze"></span></span>
+						<span class="prize-group prize-gold">🥇 <span id="prize-first"
+								class="prize-value prize-gold"></span></span>
+						<span class="prize-group prize-silver">🥈 <span id="prize-second"
+								class="prize-value prize-silver"></span></span>
+						<span class="prize-group prize-bronze">🥉 <span id="prize-third"
+								class="prize-value prize-bronze"></span></span>
 					</th>
 				</tr>
 				<tr>
@@ -36,86 +44,7 @@
 		</table>
 	</main>
 
-	<script src="js/leaderboard.js"></script>
-	<script>
-		// Loads data, calculates points, and renders the leaderboard table
-		(async function() {
-			// Load player, prediction, and result data
-			const players = await loadJSON('../data/players.json');
-			const predictions = await loadJSON('../data/predictions.json');
-			const results = await loadJSON('../data/results.json');
-			const teams = await loadJSON('../data/teams.json');
-			const games = await loadJSON('../data/games.json');
-
-			// Build leaderboard with calculated points for each player
-			const leaderboard = players.map(player => {
-				const prediction = predictions[player.id];
-				const points = prediction ? calculatePoints(prediction, results) : 0;
-				const tiebreaker = prediction ? calculateTiebreaker(prediction, results) : 0;
-				return {
-					id: player.id,
-					name: player.display_name,
-					points,
-					tiebreaker
-				};
-			});
-
-			// Sort leaderboard by points (descending)
-			leaderboard.sort((a, b) => b.points - a.points);
-
-			// Calculates the correct prize distribution using the JS function
-			const prizes = calculatePrizes(leaderboard.length);
-			const tbody = document.querySelector('#leaderboard-table tbody');
-			tbody.innerHTML = leaderboard.map((entry, idx) => {
-				let rowClass = '';
-				if (idx === 0) rowClass = 'gold-row';
-				else if (idx === 1) rowClass = 'silver-row';
-				else if (idx === 2) rowClass = 'bronze-row';
-				return `<tr class="${rowClass} player-row" data-player-id="${entry.id}"><td>${idx + 1}</td><td>${entry.name}</td><td>${entry.points}</td><td>${entry.tiebreaker}</td></tr>`;
-			}).join('');
-			
-			document.getElementById('prize-first').textContent = prizes.first;
-			document.getElementById('prize-second').textContent = prizes.second;
-			document.getElementById('prize-third').textContent = prizes.third;
-
-			// Add click event to expand/collapse score breakdown
-			tbody.querySelectorAll('.player-row').forEach(row => {
-				row.addEventListener('click', function() {
-					const playerId = this.getAttribute('data-player-id');
-					// Check if breakdown row already exists after this row
-					const nextRow = this.nextSibling;
-					if (nextRow && nextRow.classList && nextRow.classList.contains('breakdown-row')) {
-						// Fade out animation before removing
-						nextRow.style.animation = 'breakdown-fade-out 0.3s';
-						setTimeout(() => nextRow.remove(), 280);
-						return;
-					}
-					// Get player and prediction
-					const player = leaderboard.find(p => p.id == playerId);
-					const prediction = predictions[playerId];
-					// Get breakdown
-					const breakdown = prediction ? getPlayerScoreBreakdown(prediction, results, teams, games) : [];
-					// Build breakdown HTML in two columns (max 20 items per column)
-					let breakdownHtml = '';
-					if (breakdown.length) {
-						const col1 = breakdown.slice(0, 20);
-						const col2 = breakdown.slice(20, 40);
-						breakdownHtml = `<div style='display:flex;gap:0;'>
-							<div style='margin:8px 0 0 0;padding-left:10px;padding-right:10px;flex:1;text-align:left;display:flex;flex-direction:column;gap:2px;'>${col1.map(item => `<div>${item}</div>`).join('')}</div>
-							${col2.length ? `<div style='width:2px;background:#444;margin:8px 0 0 0;align-self:stretch;'></div>` : ''}
-							${col2.length ? `<div style='margin:8px 0 0 0;padding-left:10px;padding-right:10px;flex:1;text-align:left;display:flex;flex-direction:column;gap:2px;'>${col2.map(item => `<div>${item}</div>`).join('')}</div>` : ''}
-						</div>`;
-					} else {
-						breakdownHtml = '<em>No points earned.</em>';
-					}
-					// Insert breakdown row after clicked row
-					const tr = document.createElement('tr');
-					tr.className = 'breakdown-row';
-					tr.innerHTML = `<td colspan='4'>${breakdownHtml}</td>`;
-					this.parentNode.insertBefore(tr, this.nextSibling);
-				});
-			});
-		})();
-	</script>
+	<script type="module" src="js/leaderboard/index.js"></script>
 </body>
+
 </html>

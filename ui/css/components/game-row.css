@@ -1,0 +1,23 @@
+/* Styles for the Game Row component */
+.game-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+.game-label {
+	min-width: 110px;
+	font-weight: 500;
+	color: #ffd700;
+}
+.team-pick {
+	cursor: pointer;
+	padding: 2px 12px;
+	border-radius: 6px;
+	margin: 0 2px;
+	transition: background 0.2s, color 0.2s;
+	color: #fff;
+	font-weight: 600;
+	border: 1.5px solid transparent;
+}
+/* ATENÇÃO: Não sobrescrever estilos de seleção de botões de time aqui. O estilo de seleção está centralizado em predictions.css (.team-btn-selected) para evitar conflitos. */

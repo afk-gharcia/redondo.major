@@ -1,3 +1,146 @@
+/* Global styles for the CS2 Major Redondo site */
+.stage-header {
+	cursor: pointer;
+	padding: 18px 28px;
+	font-size: 1.18em;
+	font-weight: 600;
+	color: #fff;
+	background: linear-gradient(90deg, #232526 0%, #1c1c1c 100%);
+	border-bottom: 1px solid #292929;
+	border-radius: 12px 12px 0 0;
+	transition: background 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.thirty-pick.selected {
+	color: #2ecc40;
+	border: 2px solid #2ecc40;
+	background: #181818;
+}
+.thirty-list {
+	position: absolute;
+	z-index: 10;
+	background: #232526;
+	border: 1.5px solid #ffd700;
+	border-radius: 6px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+	margin-top: 2px;
+	min-width: 120px;
+	max-height: 180px;
+	overflow-y: auto;
+}
+.thirty-list-item {
+	padding: 6px 12px;
+	cursor: pointer;
+	color: #fff;
+	transition: background 0.15s, color 0.15s;
+}
+.thirty-list-item:hover {
+	background: #ffd700;
+	color: #232526;
+}
+.game-row {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	margin-bottom: 14px;
+}
+.game-label {
+	min-width: 0;
+	font-weight: 500;
+	color: #ffd700;
+	display: flex;
+	gap: 0;
+	font-size: 1.08em;
+}
+.stage-form .stage-games {
+	padding-right: 32px;
+	/* border-right: 2px solid #333; */
+	/* margin-right: 32px; */
+}
+.stage-form .thirty-table {
+	padding-left: 8px;
+}
+.stage-games {
+	min-width: 220px;
+	flex: 1 1 0;
+}
+.game-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+.game-label {
+	min-width: 110px;
+	font-weight: 500;
+	color: #ffd700;
+}
+.pick-btn {
+	background: #232526;
+	color: #fff;
+	border: 1.5px solid #ffd700;
+	border-radius: 6px;
+	padding: 6px 16px;
+	font-size: 1em;
+	font-weight: 600;
+	cursor: pointer;
+	margin-left: 2px;
+	transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.pick-btn.selected, .pick-btn:active {
+	background: #ffd700;
+	color: #232526;
+	border: 2px solid #ffd700;
+}
+.thirty-table {
+	min-width: 180px;
+	flex: 1 1 0;
+}
+.thirty-table table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+ .thirty-label {
+	color: #2ecc40;
+	font-weight: 600;
+	padding-right: 8px;
+	text-align: center;
+}
+.stage-header:not(:first-child) {
+	border-radius: 0;
+}
+.stage-header:hover, .stage-header.open {
+	background: #ffd700;
+	color: #fff;
+}
+.stage-header span {
+	flex: 1;
+}
+.stage-header::after {
+	content: '\25BC';
+	font-size: 1.1em;
+	margin-left: 12px;
+	transition: transform 0.3s;
+}
+.stage-header.open::after {
+	transform: rotate(180deg);
+}
+.stage-content {
+	background: #232526;
+	color: #fff;
+	padding: 18px 28px 24px 28px;
+	border-radius: 0 0 12px 12px;
+	margin-bottom: 12px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+	animation: fadeIn 0.4s;
+}
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(-10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
 .token-input-group {
 	display: flex;
 	flex-direction: column;
@@ -9,14 +152,14 @@
 	border: 2px solid #d32f2f !important;
 	box-shadow: 0 0 0 2px rgba(211,47,47,0.15);
 }
-/* Agrupamento vertical para campo de token e botão */
+
 .token-form-group {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
 }
-/* Estilos para validação de token na predictions.html */
+
 #error-msg {
 	color: #d32f2f;
 	background: transparent;
@@ -48,8 +191,10 @@
 	font-weight: bold;
 	margin-top: 16px;
 	display: none;
+	font-size: 1.5em;
+	letter-spacing: 0.5px;
 }
-/* Token input and button styles for predictions page */
+
 .token-container {
 	display: flex;
 	flex-direction: column;
@@ -89,7 +234,7 @@
 	color: #111;
 	border: 2px solid #111;
 }
-/* Top navigation menu styles (shared by all pages) */
+
 nav {
 	width: 100%;
 	background: #181818;
@@ -120,7 +265,7 @@ nav a:hover, nav a.active {
 .col-nome {
 	width: 220px;
 	white-space: nowrap;
-/* Leaderboard table column styles */
+
 }
 .col-pontos {
 	white-space: nowrap;
@@ -133,7 +278,7 @@ nav a:hover, nav a.active {
 .prize-header {
 	text-align: center;
 	background: #222;
-/* Prize header and medal styles for leaderboard */
+
 	color: #fff;
 	font-size: 1.1em;
 	padding: 10px 0;
@@ -157,7 +302,7 @@ nav a:hover, nav a.active {
 	from {
 		opacity: 1;
 		transform: translateY(0);
-/* Animation for hiding breakdown row (fade out) */
+
 	}
 	to {
 		opacity: 0;
@@ -169,7 +314,7 @@ nav a:hover, nav a.active {
 	animation: breakdown-fade-in 0.4s;
 	transition: background 0.3s;
 }
-/* Animation for showing breakdown row (fade in) */
+
 
 @keyframes breakdown-fade-in {
 	from {
@@ -186,7 +331,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-/* Main container for leaderboard page */
+
 	justify-content: flex-start;
 	min-height: 60vh;
 }
@@ -195,7 +340,7 @@ main {
 	margin: 32px auto;
 	width: 100%;
 	max-width: 600px;
-/* Leaderboard table layout and appearance */
+
 	background: var(--table-bg, #181818);
 	border-radius: 12px;
 	box-shadow: 0 2px 16px rgba(0,0,0,0.12);
@@ -206,12 +351,12 @@ main {
 	width: 60px;
 }
 .prize-badge {
-/* Position column style */
+
 	display: inline-block;
 	margin-left: 8px;
 	padding: 2px 8px;
 	border-radius: 12px;
-/* Medal badge styles for top 3 */
+
 	font-size: 0.9em;
 	font-weight: bold;
 	vertical-align: middle;
@@ -232,7 +377,7 @@ main {
 	color: #222;
 	border: 1px solid #b06a2c;
 }
-/* Leaderboard row colors for top 3 positions */
+
 .gold-row {
 	background: linear-gradient(90deg, #FFD700 60%, #fffbe6 100%);
 	color: #222;
@@ -293,4 +438,10 @@ th, td {
 th {
 	background: #333;
 	color: #fff;
+}
+
+/* Negrito e verde para (+<pontuação>) no breakdown */
+.score-bold {
+  font-weight: bold !important;
+  color: #1a7f37 !important;
 }

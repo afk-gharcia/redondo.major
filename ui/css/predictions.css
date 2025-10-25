@@ -1,0 +1,153 @@
+/* Layout do formulário de palpites */
+.stage-form {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 0;
+}
+.stage-form-left {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.stage-form-right {
+	flex: 1;
+}
+.stage-divider {
+	width: 2px;
+	height: auto;
+	align-self: stretch;
+	background: #333;
+	margin: 0;
+	position: relative;
+	z-index: 2;
+}
+.stage-games {
+	width: 100%;
+	max-width: 340px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.game-row {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 6px;
+	justify-content: center;
+}
+.team-btn {
+	font-size: 15px;
+	border-radius: 8px;
+	border: 1.5px solid #fff;
+	background: #23272b;
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.team-btn-name {
+	flex: 1 1 0;
+	min-width: 100px;
+	max-width: 100px;
+	width: 100px;
+	min-height: 28px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 1px 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.team-btn-home {
+	justify-content: flex-start;
+	text-align: left;
+}
+.team-btn-away {
+	justify-content: flex-end;
+	text-align: right;
+}
+.team-btn-home {
+	text-align: left;
+}
+.team-btn-away {
+	text-align: right;
+}
+.team-btn-x {
+	flex: 0 0 36px;
+	min-width: 36px;
+	max-width: 36px;
+	font-size: 15px;
+	padding: 2px 0;
+	color: #ffd700;
+	font-weight: bold;
+	cursor: default;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 28px;
+}
+/* Botão de time selecionado */
+.stage-form .team-btn.team-btn-selected {
+	background: #1e4023 !important;
+	color: #b6ffb6 !important;
+	border: 1.5px solid #3fa23f !important;
+	transition: background 0.2s, color 0.2s, border 0.2s;
+}
+/* Destaca o nome do time selecionado */
+.team-selected {
+	background: #1e4023;
+	color: #b6ffb6 !important;
+	border-radius: 5px;
+	transition: background 0.2s, color 0.2s;
+}
+/* Header de usuário acima do formulário de palpites */
+.user-header {
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto 24px auto;
+	padding: 12px 0 8px 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	font-size: 1.1em;
+}
+.user-header svg {
+	vertical-align: middle;
+}
+.user-header #logoutBtn:hover svg {
+	stroke: #ff5252;
+}
+/* Styles specific to the predictions page */
+ .stage-form .stage-games {
+	 padding-right: 32px;
+	 /* border-right: 2px solid #333; */
+	 /* margin-right: 32px; */
+}
+.stage-form .thirty-table {
+	padding-left: 8px;
+}
+.stage-games {
+	min-width: 220px;
+	flex: 1 1 0;
+}
+
+.btn-continuar {
+	padding: 10px 32px;
+	font-size: 1.08em;
+	font-weight: bold;
+	color: #fff;
+	background: #111;
+	border: 2px solid #fff;
+	border-radius: 8px;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+	transition: background 0.2s, color 0.2s;
+}
+.btn-continuar:hover {
+	background: #fff;
+	color: #111;
+	border: 2px solid #111;
+}

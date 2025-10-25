@@ -1,0 +1,66 @@
+{
+  "stage_01": {
+    "start_guess_period": "1900-01-01T00:00:00",
+    "end_guess_period": "2025-11-23T23:59:00",
+    "teams": [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+    ],
+    "games": [
+      {"id": "stage_01_game_01", "home": 2, "away": 13},
+      {"id": "stage_01_game_02", "home": 1, "away": 11},
+      {"id": "stage_01_game_03", "home": 9, "away": 15},
+      {"id": "stage_01_game_04", "home": 4, "away": 12},
+      {"id": "stage_01_game_05", "home": 6, "away": 10},
+      {"id": "stage_01_game_06", "home": 7, "away": 8},
+      {"id": "stage_01_game_07", "home": 5, "away": 16},
+      {"id": "stage_01_game_08", "home": 3, "away": 14}
+    ]
+  },
+  "stage_02": {
+    "start_guess_period": "2025-11-27T20:00:00",
+    "end_guess_period": "2025-11-28T23:59:00",
+    "teams": [
+      17, 18, 19, 20, 21, 22, 23, 24, 4, 1, 15, 9, 13, 6, 8, 7
+    ],
+    "games": [
+      {"id": "stage_02_game_01", "home": 18, "away": 1},
+      {"id": "stage_02_game_02", "home": 17, "away": 4},
+      {"id": "stage_02_game_03", "home": 19, "away": 13},
+      {"id": "stage_02_game_04", "home": 20, "away": 9},
+      {"id": "stage_02_game_05", "home": 21, "away": 7},
+      {"id": "stage_02_game_06", "home": 23, "away": 15},
+      {"id": "stage_02_game_07", "home": 22, "away": 8},
+      {"id": "stage_02_game_08", "home": 24, "away": 6}
+    ]
+  },
+  "stage_03": {
+    "start_guess_period": "2025-12-02T20:00:00",
+    "end_guess_period": "2025-12-03T23:59:00",
+    "teams": [
+      25, 26, 27, 28, 29, 30, 31, 32, 19, 8, 20, 21, 23, 18, 7, 15
+    ],
+    "games": [
+      {"id": "stage_03_game_01", "home": 25, "away": 8},
+      {"id": "stage_03_game_02", "home": 26, "away": 19},
+      {"id": "stage_03_game_03", "home": 27, "away": 23},
+      {"id": "stage_03_game_04", "home": 31, "away": 20},
+      {"id": "stage_03_game_05", "home": 29, "away": 18},
+      {"id": "stage_03_game_06", "home": 28, "away": 21},
+      {"id": "stage_03_game_07", "home": 30, "away": 15},
+      {"id": "stage_03_game_08", "home": 32, "away": 7}
+    ]
+  },
+  "playoffs": {
+    "start_guess_period": "2025-12-08T20:00:00",
+    "end_guess_period": "2025-12-10T23:59:00",
+    "teams": [
+      21, 23, 18, 28, 30, 25, 27, 26
+    ],
+    "games": [
+      {"id": "playoff_game_01", "home": 27, "away": 26},
+      {"id": "playoff_game_02", "home": 21, "away": 23},
+      {"id": "playoff_game_03", "home": 30, "away": 25},
+      {"id": "playoff_game_04", "home": 18, "away": 28}
+    ]
+  }
+}

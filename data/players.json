@@ -1,7 +1,12 @@
 [
-  { "id": 1, "name": "s1mple", "display_name": "s1mple" },
-  { "id": 2, "name": "zywoo", "display_name": "ZywOo" },
-  { "id": 3, "name": "coldzera", "display_name": "coldzera" },
-  { "id": 4, "name": "fallen", "display_name": "FalleN" },
-  { "id": 5, "name": "device", "display_name": "dev1ce" }
+  { "id": 1, "slug": "s1mple", "display_name": "s1mple" },
+  { "id": 2, "slug": "zywoo", "display_name": "ZywOo" },
+  { "id": 3, "slug": "coldzera", "display_name": "coldzera" },
+  { "id": 4, "slug": "fallen", "display_name": "FalleN" },
+  { "id": 5, "slug": "device", "display_name": "dev1ce" },
+  { "id": 6, "slug": "sh1ro", "display_name": "sh1ro" },
+  { "id": 7, "slug": "karrigan", "display_name": "karrigan" },
+  { "id": 8, "slug": "electronic", "display_name": "electroNic" },
+  { "id": 9, "slug": "yuurih", "display_name": "yuurih" },
+  { "id": 10, "slug": "ropz", "display_name": "ropz" }
 ]
