@@ -3,7 +3,7 @@
  * Handles dynamic UI for stage selection and team picks.
  */
 import { renderStageForm } from './renderStageForm.js';
-import { activateTeamBtnListeners } from './renderStageForm.js';
+import { activateTeamBtnListeners, activateSpotBoxListeners } from './renderStageForm.js';
 import { formatDate } from './formatDate.js';
 
 export async function loadMajorStages() {
@@ -70,30 +70,6 @@ export async function loadMajorStages() {
         function showError(msg) {
             errorMsg.textContent = msg;
             errorMsg.style.display = 'block';
-
-                const startDate = new Date(s.start_guess_period + 'T00:00:00-03:00'.slice(10));
-                
-                const [dataStr, horaStrRaw] = s.start_guess_period.split('T');
-                let utc3;
-                if (horaStrRaw) {
-                    const [h, m] = horaStrRaw.split(':');
-                    utc3 = new Date(Date.UTC(
-                        Number(dataStr.split('-')[0]),
-                        Number(dataStr.split('-')[1]) - 1,
-                        Number(dataStr.split('-')[2]),
-                        Number(h) + 21, // UTC-3
-                        Number(m || 0)
-                    ));
-                } else {
-                    utc3 = new Date(startDate.getTime() - 3 * 60 * 60 * 1000);
-                }
-                const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-                const dia = utc3.getDate();
-                const mes = meses[utc3.getMonth()];
-                const hora = utc3.getHours().toString().padStart(2, '0');
-                const min = utc3.getMinutes().toString().padStart(2, '0');
-                const horaFinal = min === '00' ? `${hora}h` : `${hora}:${min}h`;
-                content.innerHTML = `<div class="stage-tbd">Palpites disponíveis em ${dia} de ${mes} <span style='font-size:1.1em;'>🕒</span> ${horaFinal}</div>`;
             errorMsg.style.fontWeight = 'bold';
             tokenInput.classList.add('error');
             shake(tokenInput);
@@ -155,10 +131,14 @@ export async function loadMajorStages() {
     container.style.margin = '32px auto';
     container.style.width = '100%';
     for (const stage of stages) {
-        if (!major[stage.key]) continue;
-        const s = major[stage.key];
-        if (!s.start_guess_period || !s.end_guess_period) continue;
-        const start = new Date(s.start_guess_period);
+    if (!major[stage.key]) continue;
+    const s = major[stage.key];
+    if (!s.start_guess_period || !s.end_guess_period) continue;
+    const start = new Date(s.start_guess_period);
+
+    // Adiciona espaçamento extra entre os stages
+    const stageWrapper = document.createElement('div');
+    stageWrapper.style.marginBottom = '32px';
         const end = new Date(s.end_guess_period);
         let state = '';
         if (now < start) state = 'future';
@@ -194,15 +174,21 @@ export async function loadMajorStages() {
             const hora = utc3.getHours().toString().padStart(2, '0');
             const min = utc3.getMinutes().toString().padStart(2, '0');
             const horaFinal = min === '00' ? `${hora}h` : `${hora}:${min}h`;
-            content.innerHTML = `<div class="stage-tbd">Palpites disponíveis em ${dia} de ${mes} às ${horaFinal}</div>`;
-            content.style.opacity = '0.5';
-            content.style.pointerEvents = 'none';
+            content.innerHTML = '';
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'stage-tbd';
+            msgDiv.style.fontStyle = 'italic';
+            msgDiv.style.opacity = '0.5';
+            msgDiv.style.pointerEvents = 'none';
+            msgDiv.textContent = `Palpites disponíveis em ${dia} de ${mes} às ${horaFinal}`;
+            content.appendChild(msgDiv);
         } else {
             const htmlJogos = await renderStageForm(s, teams);
 
             content.innerHTML = htmlJogos;
 
             activateTeamBtnListeners();
+            activateSpotBoxListeners(teams, s.teams);
             if (state === 'past') {
                 content.style.opacity = '0.5';
                 content.style.pointerEvents = 'none';
@@ -211,6 +197,7 @@ export async function loadMajorStages() {
                 setTimeout(() => {
                     
                     activateTeamBtnListeners();
+                    activateSpotBoxListeners(teams, s.teams);
                     
                     content.querySelectorAll('.thirty-pick').forEach(el => {
                         el.addEventListener('click', function(e) {
@@ -273,8 +260,9 @@ export async function loadMajorStages() {
 
         });
     
-        container.appendChild(header);
-        container.appendChild(content);
+    stageWrapper.appendChild(header);
+    stageWrapper.appendChild(content);
+    container.appendChild(stageWrapper);
         idxStage++;
     }
     
@@ -285,11 +273,4 @@ export async function loadMajorStages() {
         container.appendChild(msg);
     }
     main.appendChild(container);
-    const btnDiv = document.createElement('div');
-    btnDiv.style.width = '100%';
-    btnDiv.style.display = 'flex';
-    btnDiv.style.justifyContent = 'center';
-    btnDiv.style.margin = '32px 0 0 0';
-    btnDiv.innerHTML = '<button type="button" class="btn-continuar" id="btnSalvarPalpites">Salvar Palpites</button>';
-    main.appendChild(btnDiv);
 }
