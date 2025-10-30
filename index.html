@@ -1,3 +1,9 @@
+<!--
+  Redirects users from the project root to the main leaderboard page.
+  Author: afk-gharcia
+  If automatic redirect fails, provides a clear manual link for accessibility.
+-->
+  
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +13,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Redondo CS2 Major - Track predictions and leaderboard results." />
   <meta name="keywords" content="Redondo, CS2, Major, Pool, Betting, Leaderboard, Predictions, Counter-Strike" />
+  <link rel="stylesheet" href="ui/css/index.css">
 </head>
 <body>
-  <p>If you are not redirected automatically, <a href="ui/leaderboard.html">click here to go to the leaderboard</a>.</p>
+  <p class="redirect-fallback">
+    You are being redirected to the <strong>Leaderboard</strong> page.<br>
+    <span class="redirect-fallback-note">If the page does not load automatically,</span>
+    <a href="ui/leaderboard.html" class="redirect-fallback-link">click here to access the leaderboard</a>.
+  </p>
 </body>
 </html>

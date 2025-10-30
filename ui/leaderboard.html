@@ -1,3 +1,9 @@
+<!--
+	Displays the full leaderboard and detailed score breakdowns for the Redondo CS2 Major.
+	Author: afk-gharcia
+	Provides interactive grouping, color-coded results, and phase-based breakdowns for all participants.
+	For frontend use; fetches and renders all leaderboard data dynamically.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -11,13 +17,11 @@
 	<link rel="stylesheet" href="css/leaderboard.css">
 	<link rel="stylesheet" href="css/components/stage.css">
 	<link rel="stylesheet" href="css/components/game-row.css">
+	<link rel="stylesheet" href="css/components/nav.css">
 </head>
 
 <body>
-	<nav>
-		<a href="predictions.html">Palpites</a>
-		<a href="leaderboard.html" class="active">Leaderboard</a>
-	</nav>
+	<div id="nav-placeholder"></div>
 	<main>
 		<table id="leaderboard-table">
 			<thead>
@@ -38,13 +42,221 @@
 					<th class="col-tiebreaker">(3-0/0-3)</th>
 				</tr>
 			</thead>
-			<tbody>
-				<!-- Table rows will be rendered here by JavaScript -->
-			</tbody>
+			   <tbody>
+				   <!-- Table rows are dynamically rendered by JavaScript. Do not remove this tbody. -->
+			   </tbody>
 		</table>
 	</main>
 
-	<script type="module" src="js/leaderboard/index.js"></script>
+		 <script type="module">
+				 import { loadNav } from './js/loadNav.js';
+				 import { loadPrizes } from './js/loadPrizes.js';
+				 import { loadLeaderboard } from './js/loadLeaderboard.js';
+				 loadNav('leaderboard');
+				 loadPrizes();
+
+				 
+				 async function renderLeaderboardTable() {
+					 const leaderboard = await loadLeaderboard();
+					 
+					 leaderboard.sort((a, b) => {
+						 if (b.points !== a.points) return b.points - a.points;
+						 return (b.tiebreaker ?? 0) - (a.tiebreaker ?? 0);
+					 });
+							 const tbody = document.querySelector('#leaderboard-table tbody');
+							 tbody.innerHTML = leaderboard.map((entry, idx) => {
+									let rowClass = '';
+									if (idx === 0) rowClass = 'gold-row';
+									else if (idx === 1) rowClass = 'silver-row';
+									else if (idx === 2) rowClass = 'bronze-row';
+									return `<tr class="player-row ${rowClass}" data-player-id="${entry.id}"><td>${idx + 1}</td><td>${entry.name}</td><td>${entry.points}</td><td>${entry.tiebreaker ?? ''}</td></tr>`;
+							 }).join('');
+
+						
+						tbody.querySelectorAll('.player-row').forEach(row => {
+							row.addEventListener('click', function() {
+								const playerId = this.getAttribute('data-player-id');
+								const nextRow = this.nextSibling;
+								if (nextRow && nextRow.classList && nextRow.classList.contains('detail-row')) {
+									nextRow.remove();
+									return;
+								}
+								
+								const entry = leaderboard.find(p => p.id === playerId);
+								const details = entry && entry.details ? entry.details : [];
+								
+								const groups = {};
+								for (const d of details) {
+									if (!groups[d.phase]) groups[d.phase] = [];
+									groups[d.phase].push(d);
+								}
+								let html = '';
+								if (details.length) {
+										html = Object.entries(groups).map(([phase, items]) => {
+											const col1 = items.slice(0, 10);
+											const col2 = items.slice(10, 20);
+											return `
+												<div class="score-log-group collapsed">
+													<div class="score-log-title">${phase} <span class="score-log-toggle" style="float:right;font-size:0.9em;opacity:0.7;">[+]</span></div>
+													<div class="score-log-list-wrap">
+														<ul class='score-log-list collapsed' style="text-align:left;"></ul>
+														<ul class='score-log-list collapsed' style="text-align:left;"></ul>
+													</div>
+												</div>
+											`;
+										}).join('');
+								} else {
+									html = `<span style=\"color:#aaa;font-style:italic;\">No points breakdown available.</span>`;
+								}
+								const tr = document.createElement('tr');
+								tr.className = 'detail-row breakdown-row';
+								tr.innerHTML = `<td colspan=\"4\" style=\"padding: 24px 12px; background: #181818;\">${html}</td>`;
+								this.parentNode.insertBefore(tr, this.nextSibling);
+
+								if (details.length) {
+									const groupDivs = tr.querySelectorAll('.score-log-group');
+									groupDivs.forEach((groupDiv, gidx) => {
+										const title = groupDiv.querySelector('.score-log-title');
+										const uls = groupDiv.querySelectorAll('.score-log-list');
+										groupDiv.classList.add('collapsed');
+										uls.forEach(ul => ul.classList.add('collapsed'));
+										const toggle = title.querySelector('.score-log-toggle');
+										if (toggle) toggle.textContent = '[+]';
+										
+										let items = Object.values(groups)[gidx];
+										function animateItems(items) {
+												uls[0].innerHTML = '';
+												uls[1].innerHTML = '';
+												const col1 = items.slice(0, 10);
+												const col2 = items.slice(10, 20);
+												let i = 0, j = 0;
+												function fitTextToOneLine(li) {
+													const minFont = 10;
+													let fontSize = 15;
+													li.style.whiteSpace = 'nowrap';
+													li.style.overflow = 'hidden';
+													li.style.textOverflow = 'ellipsis';
+													li.style.fontSize = fontSize + 'px';
+													while (li.scrollWidth > li.clientWidth && fontSize > minFont) {
+														fontSize -= 1;
+														li.style.fontSize = fontSize + 'px';
+													}
+												}
+												function formatDetail(d, allDetails) {
+													
+													if (!d.correct) return '';
+													
+													if (d.type === 'playoff' || d.type === 'playoff_score') {
+														
+														if (d.type === 'playoff') {
+															const pair = allDetails.find(x => x.type === 'playoff_score' && x.key === d.key && x.correct);
+															if (pair) {
+																
+																const totalPoints = d.points + pair.points;
+																return `(+${totalPoints}) ${d.prediction} venceu por ${pair.prediction}`;
+															} else {
+																return `(+${d.points}) ${d.prediction} venceu`;
+															}
+														}
+														
+														if (d.type === 'playoff_score') {
+															const pair = allDetails.find(x => x.type === 'playoff' && x.key === d.key && x.correct);
+															if (pair) return '';
+															return `(+${d.points}) ${d.prediction}`; 
+														}
+													}
+													if (d.type === 'game') {
+														return `(+${d.points}) ${d.prediction} venceu`;
+													}
+													if (d.type === 'classified') {
+														return `(+${d.points}) ${d.prediction} classificado`;
+													}
+													if (d.type === '3-0') {
+														return `(+${d.points}) ${d.prediction} [3-0]`;
+													}
+													if (d.type === '0-3') {
+														return `(+${d.points}) ${d.prediction} [0-3]`;
+													}
+													if (d.type === 'champion') {
+														return `(+${d.points}) ${d.prediction} campeão`;
+													}
+													return '';
+												}
+												function addCol1() {
+													if (!document.body.contains(tr)) return;
+													if (i < col1.length) {
+														const detailText = formatDetail(col1[i], items);
+														if (detailText) {
+															const li = document.createElement('li');
+															li.innerHTML = detailText;
+															li.className = 'score-log-item';
+															
+															if (col1[i].type === 'game') li.classList.add('score-type-game');
+															else if (col1[i].type === 'classified') li.classList.add('score-type-classified');
+															else if (col1[i].type === '3-0' || col1[i].type === '0-3') li.classList.add('score-type-30');
+															else if (col1[i].type === 'playoff') {
+																
+																const pair = items.find(x => x.type === 'playoff_score' && x.key === col1[i].key && x.correct);
+																if (pair) li.classList.add('score-type-playoff-both');
+																else li.classList.add('score-type-playoff-lime');
+															}
+															else if (col1[i].type === 'champion') li.classList.add('score-type-champion');
+															uls[0].appendChild(li);
+															setTimeout(() => fitTextToOneLine(li), 0);
+														}
+														i++;
+														setTimeout(addCol1, 60);
+													}
+												}
+												function addCol2() {
+													if (!document.body.contains(tr)) return;
+													if (j < col2.length) {
+														const detailText = formatDetail(col2[j], items);
+														if (detailText) {
+															const li = document.createElement('li');
+															li.innerHTML = detailText;
+															li.className = 'score-log-item';
+															
+															if (col2[j].type === 'game') li.classList.add('score-type-game');
+															else if (col2[j].type === 'classified') li.classList.add('score-type-classified');
+															else if (col2[j].type === '3-0' || col2[j].type === '0-3') li.classList.add('score-type-30');
+															else if (col2[j].type === 'playoff') {
+																const pair = items.find(x => x.type === 'playoff_score' && x.key === col2[j].key && x.correct);
+																if (pair) li.classList.add('score-type-playoff-both');
+																else li.classList.add('score-type-playoff-lime');
+															}
+															else if (col2[j].type === 'champion') li.classList.add('score-type-champion');
+															uls[1].appendChild(li);
+															setTimeout(() => fitTextToOneLine(li), 0);
+														}
+														j++;
+														setTimeout(addCol2, 60);
+													}
+												}
+												addCol1();
+												addCol2();
+											}
+										title.addEventListener('click', () => {
+											groupDiv.classList.toggle('collapsed');
+											if (groupDiv.classList.contains('collapsed')) {
+												uls.forEach(ul => {
+													ul.classList.add('collapsed');
+													ul.innerHTML = '';
+												});
+												if (toggle) toggle.textContent = '[+]';
+											} else {
+												uls.forEach(ul => ul.classList.remove('collapsed'));
+												if (toggle) toggle.textContent = '[–]';
+												animateItems(items);
+											}
+										});
+									});
+								}
+							});
+						});
+						}
+						renderLeaderboardTable();
+		 </script>
 </body>
 
 </html>
