@@ -1,55 +1,103 @@
+<!--
+    Renders the predictions page for the Redondo CS2 Major.
+    Author: afk-gharcia
+    Provides interactive forms for users to submit game and classification predictions, with period-based logic and user authentication via token.
+    For frontend use; fetches and renders all phase, game, and user prediction data dynamically.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Make your predictions for the CS2 Major Redondo.">
+    <meta name="description" content="Faça seus palpites para o CS2 Major Redondo.">
     <meta name="keywords" content="CS2, redondo, palpites, major, Counter-Strike">
     <title>Palpites</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/predictions.css">
-    <link rel="stylesheet" href="css/components/stage.css">
-    <link rel="stylesheet" href="css/components/game-row.css">
-    <link rel="stylesheet" href="css/components/token-input.css">
     <link rel="stylesheet" href="css/components/nav.css">
 </head>
 <body>
     <div id="nav-placeholder"></div>
-        <main>
-                <div class="token-container">
-                        <form id="token-form">
-                            <div class="token-form-group">
-                                <div class="token-input-group">
-                                    <div id="error-msg" class="hidden"></div>
-                                    <input type="text" class="token-input" id="token-input" placeholder="Digite seu token..." maxlength="5" required />
-                                </div>
-                                <button type="submit" class="btn-continuar">Continuar</button>
-                            </div>
-                        </form>
+        <header id="player-tab" class="player-tab"></header>
+    <div id="stage-tabs" class="stage-tabs"></div>
+    <div id="stage-content-box"></div>
+    <div id="foot-box" class="foot-box"></div>
+    <main>
+        <section class="token-container">
+            <form id="token-form" autocomplete="off">
+                <div class="token-form-group">
+                    <div class="token-input-group">
+                        <div id="error-msg" class="hidden"></div>
+                        <label for="token-input" class="sr-only">Token</label>
+                        <input type="text" class="token-input" id="token-input" placeholder="Digite seu token..." maxlength="5" required aria-label="Token" />
+                    </div>
+                    <button type="submit" class="btn-continuar">Continuar</button>
                 </div>
-            <div id="userId" class="hidden"></div>
-        </main>
+            </form>
+        </section>
+        <div id="userId" class="hidden"></div>
+    </main>
     <script type="module">
-    import { loadNav } from './js/loadNav.js';
-        loadNav('predictions');
-    </script>
-    <script type="module">
-        import { showUserDisplayName } from './js/components/userDisplayName.js';
-        import { loadMajorStages } from './js/predictions/loadMajorStages.js';
-        import { API_BASE_URL } from './js/config.js';
 
+    import { loadNav } from './js/components/nav.js';
+    import { API_BASE_URL } from './js/config.js';
+    import { showPlayerEditPopup } from './js/components/playerEditPopup.js';
+    import { loadPredictions } from './js/loadPredictions.js';
+    import { showFormPredictPopup } from './js/components/formPredictPopup.js';
+    loadNav('predictions');
+
+    
+    document.getElementById('foot-box').style.display = 'none';
+
+        
+        function showPlayerTab(name) {
+            const playerTab = document.getElementById('player-tab');
+            if (!name) {
+                playerTab.classList.remove('show');
+                setTimeout(() => {
+                    playerTab.innerHTML = '';
+                }, 400);
+                return;
+            }
+            playerTab.innerHTML = `
+                <div class="player-tab-content">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg>
+                    <span id="playerDisplayName" class="player-display-name"></span>
+                    <span class="player-tab-btns">
+                        <button id="editPlayerBtn" title="Editar" class="player-btn player-btn-edit" aria-label="Editar nome do jogador"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button>
+                        <button id="logoutBtn" title="Sair" class="player-btn player-btn-logout" aria-label="Sair"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                    </span>
+                </div>
+            `;
+            document.getElementById('playerDisplayName').textContent = name;
+            setTimeout(() => {
+                playerTab.classList.add('show');
+            }, 10);
+            document.getElementById('logoutBtn').onclick = () => {
+                localStorage.removeItem('userId');
+                localStorage.removeItem('display_name');
+                window.location.reload();
+            };
+            document.getElementById('editPlayerBtn').onclick = () => {
+                const playerId = localStorage.getItem('userId');
+                const currentName = localStorage.getItem('display_name') || '';
+                showPlayerEditPopup({
+                  currentName,
+                  playerId,
+                  onSuccess: (newName) => {
+                    localStorage.setItem('display_name', newName);
+                    showPlayerTab(newName);
+                  }
+                });
+            };
+        }
+
+        
         const form = document.getElementById('token-form');
         const tokenInput = document.getElementById('token-input');
         const errorMsg = document.getElementById('error-msg');
         const tokenContainer = document.querySelector('.token-container');
         const userIdDiv = document.getElementById('userId');
-
-        const savedUserId = localStorage.getItem('userId');
-        if (savedUserId) {
-            tokenContainer.style.display = 'none';
-            userIdDiv.style.display = 'block';
-            loadMajorStages();
-        }
 
         function shake(element) {
             element.classList.add('shake');
@@ -73,14 +121,204 @@
             tokenInput.classList.remove('error');
         }
 
+    async function renderStageTabsFromPhases(phases, rawResponse) {
+            const tabsContainer = document.getElementById('stage-tabs');
+            const contentBox = document.getElementById('stage-content-box');
+            tabsContainer.innerHTML = '';
+            contentBox.innerHTML = '';
+            const footBox = document.getElementById('foot-box');
+            footBox.style.display = 'none';
+            footBox.classList.remove('foot-box-show');
+            console.log('Resposta do endpoint /api/predictions:', rawResponse);
+            if (!phases || !phases.length) {
+                tabsContainer.innerHTML = '<div style="color:#ffd700;opacity:0.7;">Nenhuma fase encontrada</div>';
+                return;
+            }
+            let openTabIdx = null;
+            phases.forEach((phase, idx) => {
+                if (!phase.major_phase_name) return;
+                const tab = document.createElement('div');
+                tab.className = 'stage-tab';
+                tab.textContent = phase.major_phase_name;
+                tab.style.cursor = 'pointer';
+                tab.addEventListener('click', () => {
+                    const footBox = document.getElementById('foot-box');
+                    
+                    const start = phase.start_guess_period || '';
+                    const end = phase.end_guess_period || '';
+                    if (openTabIdx === idx) {
+                        
+                        tab.classList.remove('active');
+                        contentBox.innerHTML = '';
+                        footBox.style.display = 'none';
+                        footBox.classList.remove('foot-box-show');
+                        openTabIdx = null;
+                    } else {
+                        
+                        tabsContainer.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        
+                        let formHtml = '';
+                        if (Array.isArray(phase.games) && phase.games.length > 0) {
+                            formHtml += `<form class="stage-form">`;
+                            phase.games.forEach((game, gidx) => {
+                                const t1 = game.team_01_name || 'Time 1';
+                                const t2 = game.team_02_name || 'Time 2';
+                                formHtml += `
+                                    <div class="game-row" style="margin-bottom:10px;">
+                                        <button type="button" class="team-btn team-btn-home" data-game="${gidx}" data-team="1">${t1}</button>
+                                        <span class="team-btn-x">x</span>
+                                        <button type="button" class="team-btn team-btn-away" data-game="${gidx}" data-team="2">${t2}</button>
+                                    </div>
+                                `;
+                            });
+                            formHtml += `</form>`;
+                        } else {
+                            formHtml = '';
+                        }
+                        
+                        let showContent = true;
+                        let locked = false;
+                        if (start && end) {
+                            const now = new Date();
+                            const startDate = new Date(start);
+                            const endDate = new Date(end);
+                            if (now < startDate) {
+                                showContent = false;
+                            } else if (now > endDate) {
+                                locked = true;
+                            }
+                        }
+                        if (showContent) {
+                            contentBox.innerHTML = `
+                                <div class="stage-content-tab${locked ? ' stage-content-tab-locked' : ''}">
+                                    <div class="stage-form-split">
+                                        <div class="stage-form-left">
+                                            <div class="stage-content-inner">${formHtml}</div>
+                                        </div>
+                                        <div class="stage-divider"></div>
+                                        <div class="stage-form-right">
+                                            <div class="classification-tables-row">
+                                                <div class="classification-tables-col">
+                                                    <div class="classification-table" style="margin-bottom:25px;">
+                                                        <ol class="classification-list">
+                                                            <li><span class="classification-title">3-0</span></li>
+                                                            <li class="classification-pick" data-type="3-0"></li>
+                                                            <li class="classification-pick" data-type="3-0"></li>
+                                                        </ol>
+                                                    </div>
+                                                    <div class="classification-table">
+                                                        <ol class="classification-list">
+                                                            <li><span class="classification-title">0-3</span></li>
+                                                            <li class="classification-pick" data-type="0-3"></li>
+                                                            <li class="classification-pick" data-type="0-3"></li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                                <div class="classification-tables-col">
+                                                    <div class="classification-table">
+                                                        <ol class="classification-list">
+                                                            <li><span class="classification-title">3-1/3-2</span></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                            <li class="classification-pick" data-type="classified"></li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            contentBox.innerHTML = '';
+                        }
+                        
+                        const form = contentBox.querySelector('.stage-form');
+                        if (form) {
+                            form.querySelectorAll('.team-btn').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const gameIdx = this.getAttribute('data-game');
+                                    if (this.classList.contains('team-btn-selected')) {
+                                        
+                                        this.classList.remove('team-btn-selected');
+                                    } else {
+                                        
+                                        form.querySelectorAll(`.team-btn[data-game="${gameIdx}"]`).forEach(b => b.classList.remove('team-btn-selected'));
+                                        this.classList.add('team-btn-selected');
+                                    }
+                                });
+                            });
+                        }
+                        
+                        contentBox.querySelectorAll('.classification-pick').forEach((el, idx) => {
+                            el.addEventListener('click', () => {
+                                showFormPredictPopup({
+                                    teams: phase.teams || [],
+                                    type: el.getAttribute('data-type'),
+                                    index: idx
+                                });
+                            });
+                        });
+                        
+                                                                                                                        let periodText = '';
+                                                                                                                        let showSaveBtn = false;
+                                                                                                                        if (start && end) {
+                                                                                                                            const now = new Date();
+                                                                                                                            const startDate = new Date(start);
+                                                                                                                            const endDate = new Date(end);
+                                                                                                                            function formatCustomDate(date) {
+                                                                                                                                const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+                                                                                                                                const dia = date.getDate();
+                                                                                                                                const mes = meses[date.getMonth()];
+                                                                                                                                const hora = date.getHours().toString().padStart(2,'0');
+                                                                                                                                const min = date.getMinutes().toString().padStart(2,'0');
+                                                                                                                                return `${dia} de ${mes} às ${hora}:${min}`;
+                                                                                                                            }
+                                                                                                                            if (now < startDate) {
+                                                                                                                                periodText = `Os palpites abrem em ${formatCustomDate(startDate)}`;
+                                                                                                                            } else if (now > endDate) {
+                                                                                                                                periodText = 'Período de palpites encerrado';
+                                                                                                                            } else {
+                                                                                                                                periodText = `Envie seus palpites até ${formatCustomDate(endDate)}`;
+                                                                                                                                showSaveBtn = true;
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        footBox.innerHTML = `
+                                                                                                                            <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+                                                                                                                                <span class="foot-box-period" style="font-size:0.98em;font-weight:600;color:#ffd700cc;">${periodText}</span>
+                                                                                                                                ${showSaveBtn ? `<button class="foot-box-save-btn" style="min-width:90px;padding:8px 22px;font-size:1em;font-weight:700;background:#ffd700;color:#23272b;border:none;border-radius:10px;box-shadow:0 1px 8px #ffd70022;cursor:pointer;transition:background 0.18s;">Salvar</button>` : ''}
+                                                                                                                            </div>
+                                                                                                                        `;
+                                                footBox.classList.remove('foot-box-show');
+                                                footBox.style.display = 'none';
+                                                setTimeout(() => {
+                                                        footBox.style.display = '';
+                                                        
+                                                        void footBox.offsetWidth;
+                                                        footBox.classList.add('foot-box-show');
+                                                }, 10);
+                        openTabIdx = idx;
+                    }
+                });
+                tabsContainer.appendChild(tab);
+            });
+        }
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             hideError();
-            userIdDiv.style.display = 'none';
+            userIdDiv.classList.add('hidden');
             const token = tokenInput.value.trim().toUpperCase();
             if (!token) return;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Carregando...';
             try {
-                // Endpoint Vercel para validação de token
+                
                 const res = await fetch(`${API_BASE_URL}/api/validateToken`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -88,22 +326,45 @@
                 });
                 const data = await res.json();
                 if (data.valid) {
-                    tokenContainer.style.display = 'none';
-                    userIdDiv.style.display = 'block';
+                    const tokenContainerEl = document.querySelector('.token-container');
+                    tokenContainerEl.classList.add('hidden');
+                    tokenContainerEl.style.display = 'none';
+                    userIdDiv.classList.remove('hidden');
                     localStorage.setItem('userId', data.userId);
                     if (data.display_name) {
                         localStorage.setItem('display_name', data.display_name);
                     }
-                    // Atualiza o menu superior para admin se necessário
-                    import('./js/loadNav.js').then(mod => mod.loadNav('predictions'));
-                    loadMajorStages();
+                    showPlayerTab(data.display_name);
+                    
+                    import('./js/components/nav.js').then(mod => mod.loadNav('predictions'));
+                    
+                    const predictions = await loadPredictions(data.userId);
+                    renderStageTabsFromPhases(predictions.phases, predictions);
                 } else {
                     showError('Token inválido ..');
                 }
             } catch (err) {
                 showError('Erro de conexão com a API.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Continuar';
             }
         });
+
+        
+        const savedName = localStorage.getItem('display_name');
+        const savedUserId = localStorage.getItem('userId');
+        if (savedName && savedUserId) {
+            const tokenContainerEl = document.querySelector('.token-container');
+            tokenContainerEl.classList.add('hidden');
+            tokenContainerEl.style.display = 'none';
+            userIdDiv.classList.remove('hidden');
+            showPlayerTab(savedName);
+           
+            loadPredictions(savedUserId).then(predictions => {
+                renderStageTabsFromPhases(predictions.phases, predictions);
+            });
+        }
     </script>
 </body>
 </html>

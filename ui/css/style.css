@@ -17,95 +17,6 @@
 }
 .game-label {
 	min-width: 0;
-	font-weight: 500;
-	color: #ffd700;
-	display: flex;
-	gap: 0;
-	font-size: 1.08em;
-}
-.stage-form .stage-games {
-	padding-right: 32px;
-
-}
-.stage-form .thirty-table {
-	padding-left: 8px;
-}
-.stage-games {
-	min-width: 220px;
-	flex: 1 1 0;
-}
-.game-row {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	margin-bottom: 10px;
-}
-.game-label {
-	min-width: 110px;
-	font-weight: 500;
-	color: #ffd700;
-}
-.pick-btn {
-	background: #232526;
-	color: #fff;
-	border: 1.5px solid #ffd700;
-	border-radius: 6px;
-	padding: 6px 16px;
-	font-size: 1em;
-	font-weight: 600;
-	cursor: pointer;
-	margin-left: 2px;
-	transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.pick-btn.selected, .pick-btn:active {
-	background: #ffd700;
-	color: #232526;
-	border: 2px solid #ffd700;
-}
-.thirty-table {
-	min-width: 180px;
-	flex: 1 1 0;
-}
-.thirty-table table {
-	width: 100%;
-	border-collapse: collapse;
-	border-spacing: 0;
-}
- .thirty-label {
-	color: #2ecc40;
-	font-weight: 600;
-	padding-right: 8px;
-	text-align: center;
-}
-.stage-header:not(:first-child) {
-	border-radius: 0;
-}
-.stage-header:hover, .stage-header.open {
-	background: #ffd700;
-	color: #fff;
-}
-.stage-header span {
-	flex: 1;
-}
-.stage-header::after {
-	content: '\25BC';
-	font-size: 1.1em;
-	margin-left: 12px;
-	transition: transform 0.3s;
-}
-.stage-header.open::after {
-	transform: rotate(180deg);
-}
-.stage-content {
-	background: #232526;
-	color: #fff;
-	padding: 18px 28px 24px 28px;
-	border-radius: 0 0 12px 12px;
-	margin-bottom: 12px;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-	animation: fadeIn 0.4s;
-}
-@keyframes fadeIn {
 	from { opacity: 0; transform: translateY(-10px); }
 	to { opacity: 1; transform: translateY(0); }
 }
@@ -198,6 +109,7 @@
 	border-color: #ffd700;
 }
 .btn-continuar {
+	margin-top: 16px;
 	padding: 10px 32px;
 	font-size: 1.08em;
 	font-weight: bold;

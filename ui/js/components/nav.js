@@ -4,7 +4,7 @@
  * @description Dynamically loads the nav component and adds the Admin menu for admin users.
  */
 
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL } from '../config.js';
 
 export function loadNav(activePage) {
   fetch('components/nav.html')
