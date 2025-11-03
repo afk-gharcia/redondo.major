@@ -1,0 +1,21 @@
+/* Estilo para mensagem em branco da página admin */
+.admin-blank-msg {
+    padding: 48px 0;
+    text-align: center;
+    color: #ffd700;
+    font-size: 1.3em;
+    opacity: 0.7;
+}
+
+.admin-content-hidden {
+    display: none;
+}
+
+/* Espaçamento reduzido entre player tab e tabs na admin */
+.player-tab {
+  top: 18px !important;
+}
+.stage-tabs {
+  margin-top: 32px !important;
+}
+

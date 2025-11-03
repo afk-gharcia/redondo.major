@@ -1,0 +1,120 @@
+<!--
+    Admin page for Redondo CS2 Major.
+    Author: afk-gharcia
+    Blank admin dashboard with consistent style and navigation.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Administração do CS2 Major Redondo.">
+    <meta name="keywords" content="CS2, redondo, admin, major, Counter-Strike">
+    <title>Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/nav.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/predictions.css">
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    <header id="player-tab" class="player-tab"></header>
+    <main>
+        <section class="admin-blank-msg" id="admin-msg">
+            Esperando authenticação administrativa ..
+        </section>
+        <section id="admin-content" class="admin-content-hidden"></section>
+    </main>
+    <script type="module">
+    import { showPlayerTab } from './js/components/showPlayerTab.js';
+        import { loadNav } from './js/components/nav.js';
+        import { loadAdmin } from './js/loadAdmin.js';
+        import { showAdminPassPopup } from './js/components/adminPopup.js';
+        import { renderAdminSections } from './js/components/renderAdminSections.js';
+        loadNav('admin');
+
+        let adminData = null;
+let adminPass = null;
+
+// Tenta restaurar adminData e adminPass do sessionStorage
+try {
+    const storedData = sessionStorage.getItem('adminData');
+    if (storedData) {
+        adminData = JSON.parse(storedData);
+    }
+    const storedPass = sessionStorage.getItem('adminPass');
+    if (storedPass) {
+        adminPass = storedPass;
+    }
+} catch (e) {
+    adminData = null;
+    adminPass = null;
+}
+
+async function carregarAdminDashboard() {
+    // Exibe o player tab se houver nome salvo
+    const displayName = localStorage.getItem('display_name');
+    if (displayName) {
+        showPlayerTab(displayName, {
+            onLogout: () => {
+                // Resetar adminData, adminPass e sessionStorage ao fazer logout
+                adminData = null;
+                adminPass = null;
+                sessionStorage.removeItem('adminData');
+                sessionStorage.removeItem('adminPass');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('display_name');
+                window.location.href = 'predictions.html';
+            }
+        });
+    }
+    const msg = document.getElementById('admin-msg');
+    const content = document.getElementById('admin-content');
+    if (!adminPass) {
+        // Não há adminPass salvo, pede senha
+        showAdminPassPopup({
+            onSubmit: async (pass, { error, close }) => {
+                msg.textContent = 'Carregando dados administrativos...';
+                try {
+                    const data = await loadAdmin(pass);
+                    adminData = data;
+                    adminPass = pass;
+                    // Salva no sessionStorage
+                    sessionStorage.setItem('adminData', JSON.stringify(adminData));
+                    sessionStorage.setItem('adminPass', pass);
+                    close();
+                    msg.style.display = 'none';
+                    content.classList.remove('admin-content-hidden');
+                    renderAdminSections(adminData);
+                } catch (err) {
+                    error('Acesso negado ou erro: ' + (err.message || 'Erro desconhecido'));
+                    setTimeout(() => carregarAdminDashboard(), 1200);
+                }
+            }
+        });
+    } else {
+        // Sempre recarrega os dados do backend usando o adminPass salvo
+        msg.textContent = 'Carregando dados administrativos...';
+        try {
+            const data = await loadAdmin(adminPass);
+            adminData = data;
+            sessionStorage.setItem('adminData', JSON.stringify(adminData));
+            msg.style.display = 'none';
+            content.classList.remove('admin-content-hidden');
+            renderAdminSections(adminData);
+        } catch (err) {
+            // Se falhar, remove adminPass e força novo login
+            sessionStorage.removeItem('adminPass');
+            sessionStorage.removeItem('adminData');
+            adminData = null;
+            adminPass = null;
+            msg.textContent = 'Erro de autenticação. Faça login novamente.';
+            setTimeout(() => carregarAdminDashboard(), 1200);
+        }
+    }
+}
+
+    carregarAdminDashboard();
+    </script>
+</body>
+</html>
