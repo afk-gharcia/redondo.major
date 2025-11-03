@@ -1,0 +1,78 @@
+.stage-content-tab {
+  /* Exemplo de estilos principais do box do stage */
+  background: #23272b;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px #00000022;
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 18px;
+}
+
+.stage-form-split {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.stage-form-left {
+  flex: 1 1 0;
+}
+
+.stage-form-right {
+  flex: 1 1 0;
+}
+
+.stage-divider {
+  width: 2px;
+  background: #ffd70044;
+  border-radius: 2px;
+  margin: 0 12px;
+}
+
+.classification-tables-row {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+}
+
+.classification-tables-col {
+  flex: 1 1 0;
+}
+
+.classification-table {
+  background: #23272b;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #ffd70011;
+  margin-bottom: 25px;
+  padding: 10px 8px;
+}
+
+.classification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.classification-title {
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.classification-pick {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin: 2px 0;
+  background: #23272b;
+  color: #fff;
+  transition: background 0.15s;
+}
+
+.classification-pick-selected {
+  background: #ffd700;
+  color: #23272b;
+}
+
+.stage-content-tab-locked {
+  opacity: 0.6;
+  pointer-events: none;
+}

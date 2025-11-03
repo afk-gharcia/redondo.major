@@ -1,0 +1,26 @@
+.foot-box-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.foot-box-period {
+  font-size: 0.98em;
+  font-weight: 600;
+  color: #ffd700cc;
+}
+
+.foot-box-save-btn {
+  min-width: 90px;
+  padding: 8px 22px;
+  font-size: 1em;
+  font-weight: 700;
+  background: #ffd700;
+  color: #23272b;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 1px 8px #ffd70022;
+  cursor: pointer;
+  transition: background 0.18s;
+}

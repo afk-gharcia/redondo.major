@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/predictions.css">
     <link rel="stylesheet" href="css/components/nav.css">
+    <link rel="stylesheet" href="css/components/footBox.css">
 </head>
 <body>
     <div id="nav-placeholder"></div>
@@ -44,6 +45,8 @@
     import { showPlayerEditPopup } from './js/components/playerEditPopup.js';
     import { loadPredictions } from './js/loadPredictions.js';
     import { showFormPredictPopup } from './js/components/formPredictPopup.js';
+    import { renderStageTabs } from './js/components/renderStageTabs.js';
+    import { renderStageContent } from './js/components/renderStageContent.js';
     loadNav('predictions');
 
     
@@ -124,187 +127,66 @@
     async function renderStageTabsFromPhases(phases, rawResponse) {
             const tabsContainer = document.getElementById('stage-tabs');
             const contentBox = document.getElementById('stage-content-box');
+            const footBox = document.getElementById('foot-box');
             tabsContainer.innerHTML = '';
             contentBox.innerHTML = '';
-            const footBox = document.getElementById('foot-box');
             footBox.style.display = 'none';
             footBox.classList.remove('foot-box-show');
-            console.log('Resposta do endpoint /api/predictions:', rawResponse);
             if (!phases || !phases.length) {
                 tabsContainer.innerHTML = '<div style="color:#ffd700;opacity:0.7;">Nenhuma fase encontrada</div>';
                 return;
             }
-            let openTabIdx = null;
-            phases.forEach((phase, idx) => {
-                if (!phase.major_phase_name) return;
-                const tab = document.createElement('div');
-                tab.className = 'stage-tab';
-                tab.textContent = phase.major_phase_name;
-                tab.style.cursor = 'pointer';
-                tab.addEventListener('click', () => {
-                    const footBox = document.getElementById('foot-box');
-                    
-                    const start = phase.start_guess_period || '';
-                    const end = phase.end_guess_period || '';
-                    if (openTabIdx === idx) {
-                        
-                        tab.classList.remove('active');
-                        contentBox.innerHTML = '';
-                        footBox.style.display = 'none';
-                        footBox.classList.remove('foot-box-show');
-                        openTabIdx = null;
-                    } else {
-                        
-                        tabsContainer.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
-                        tab.classList.add('active');
-                        
-                        let formHtml = '';
-                        if (Array.isArray(phase.games) && phase.games.length > 0) {
-                            formHtml += `<form class="stage-form">`;
-                            phase.games.forEach((game, gidx) => {
-                                const t1 = game.team_01_name || 'Time 1';
-                                const t2 = game.team_02_name || 'Time 2';
-                                formHtml += `
-                                    <div class="game-row" style="margin-bottom:10px;">
-                                        <button type="button" class="team-btn team-btn-home" data-game="${gidx}" data-team="1">${t1}</button>
-                                        <span class="team-btn-x">x</span>
-                                        <button type="button" class="team-btn team-btn-away" data-game="${gidx}" data-team="2">${t2}</button>
-                                    </div>
-                                `;
-                            });
-                            formHtml += `</form>`;
-                        } else {
-                            formHtml = '';
-                        }
-                        
-                        let showContent = true;
-                        let locked = false;
-                        if (start && end) {
-                            const now = new Date();
-                            const startDate = new Date(start);
-                            const endDate = new Date(end);
-                            if (now < startDate) {
-                                showContent = false;
-                            } else if (now > endDate) {
-                                locked = true;
-                            }
-                        }
-                        if (showContent) {
-                            contentBox.innerHTML = `
-                                <div class="stage-content-tab${locked ? ' stage-content-tab-locked' : ''}">
-                                    <div class="stage-form-split">
-                                        <div class="stage-form-left">
-                                            <div class="stage-content-inner">${formHtml}</div>
-                                        </div>
-                                        <div class="stage-divider"></div>
-                                        <div class="stage-form-right">
-                                            <div class="classification-tables-row">
-                                                <div class="classification-tables-col">
-                                                    <div class="classification-table" style="margin-bottom:25px;">
-                                                        <ol class="classification-list">
-                                                            <li><span class="classification-title">3-0</span></li>
-                                                            <li class="classification-pick" data-type="3-0"></li>
-                                                            <li class="classification-pick" data-type="3-0"></li>
-                                                        </ol>
-                                                    </div>
-                                                    <div class="classification-table">
-                                                        <ol class="classification-list">
-                                                            <li><span class="classification-title">0-3</span></li>
-                                                            <li class="classification-pick" data-type="0-3"></li>
-                                                            <li class="classification-pick" data-type="0-3"></li>
-                                                        </ol>
-                                                    </div>
-                                                </div>
-                                                <div class="classification-tables-col">
-                                                    <div class="classification-table">
-                                                        <ol class="classification-list">
-                                                            <li><span class="classification-title">3-1/3-2</span></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                            <li class="classification-pick" data-type="classified"></li>
-                                                        </ol>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        } else {
-                            contentBox.innerHTML = '';
-                        }
-                        
-                        const form = contentBox.querySelector('.stage-form');
-                        if (form) {
-                            form.querySelectorAll('.team-btn').forEach(btn => {
-                                btn.addEventListener('click', function() {
-                                    const gameIdx = this.getAttribute('data-game');
-                                    if (this.classList.contains('team-btn-selected')) {
-                                        
-                                        this.classList.remove('team-btn-selected');
-                                    } else {
-                                        
-                                        form.querySelectorAll(`.team-btn[data-game="${gameIdx}"]`).forEach(b => b.classList.remove('team-btn-selected'));
-                                        this.classList.add('team-btn-selected');
-                                    }
-                                });
-                            });
-                        }
-                        
-                        contentBox.querySelectorAll('.classification-pick').forEach((el, idx) => {
-                            el.addEventListener('click', () => {
-                                showFormPredictPopup({
-                                    teams: phase.teams || [],
-                                    type: el.getAttribute('data-type'),
-                                    index: idx
-                                });
-                            });
+            // Usa o módulo de tabs e conteúdo
+            renderStageTabs(phases, async (phase, idx) => {
+                if (!phase) {
+                    contentBox.innerHTML = '';
+                    footBox.style.display = 'none';
+                    footBox.classList.remove('foot-box-show');
+                    return;
+                }
+                // Renderiza o conteúdo do stage e integra o foot-box
+                await renderStageContent(phase, contentBox, phase.predictions, async () => {
+                    // Callback do botão Salvar
+                    const player_id = localStorage.getItem('userId');
+                    const major_phase_id = phase.major_phase_id;
+                    const saveBtn = footBox.querySelector('#foot-box-save-btn');
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = 'Salvando...';
+                    try {
+                        const mod = await import('./js/savePredictions.js');
+                        const data = await mod.savePredictions({
+                            player_id,
+                            major_phase_id,
+                            phaseGames: phase.games,
+                            phaseTeams: phase.teams,
+                            contentBox
                         });
-                        
-                                                                                                                        let periodText = '';
-                                                                                                                        let showSaveBtn = false;
-                                                                                                                        if (start && end) {
-                                                                                                                            const now = new Date();
-                                                                                                                            const startDate = new Date(start);
-                                                                                                                            const endDate = new Date(end);
-                                                                                                                            function formatCustomDate(date) {
-                                                                                                                                const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-                                                                                                                                const dia = date.getDate();
-                                                                                                                                const mes = meses[date.getMonth()];
-                                                                                                                                const hora = date.getHours().toString().padStart(2,'0');
-                                                                                                                                const min = date.getMinutes().toString().padStart(2,'0');
-                                                                                                                                return `${dia} de ${mes} às ${hora}:${min}`;
-                                                                                                                            }
-                                                                                                                            if (now < startDate) {
-                                                                                                                                periodText = `Os palpites abrem em ${formatCustomDate(startDate)}`;
-                                                                                                                            } else if (now > endDate) {
-                                                                                                                                periodText = 'Período de palpites encerrado';
-                                                                                                                            } else {
-                                                                                                                                periodText = `Envie seus palpites até ${formatCustomDate(endDate)}`;
-                                                                                                                                showSaveBtn = true;
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        footBox.innerHTML = `
-                                                                                                                            <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
-                                                                                                                                <span class="foot-box-period" style="font-size:0.98em;font-weight:600;color:#ffd700cc;">${periodText}</span>
-                                                                                                                                ${showSaveBtn ? `<button class="foot-box-save-btn" style="min-width:90px;padding:8px 22px;font-size:1em;font-weight:700;background:#ffd700;color:#23272b;border:none;border-radius:10px;box-shadow:0 1px 8px #ffd70022;cursor:pointer;transition:background 0.18s;">Salvar</button>` : ''}
-                                                                                                                            </div>
-                                                                                                                        `;
-                                                footBox.classList.remove('foot-box-show');
-                                                footBox.style.display = 'none';
-                                                setTimeout(() => {
-                                                        footBox.style.display = '';
-                                                        
-                                                        void footBox.offsetWidth;
-                                                        footBox.classList.add('foot-box-show');
-                                                }, 10);
-                        openTabIdx = idx;
+                        if (data.success) {
+                            saveBtn.textContent = 'Salvo!';
+                            setTimeout(() => {
+                                saveBtn.textContent = 'Salvar';
+                                saveBtn.disabled = false;
+                                window.location.reload();
+                            }, 1200);
+                        } else {
+                            saveBtn.textContent = 'Erro';
+                            setTimeout(() => { saveBtn.textContent = 'Salvar'; saveBtn.disabled = false; }, 1800);
+                            alert('Erro ao salvar: ' + (data.error || 'Erro desconhecido.'));
+                        }
+                    } catch (err) {
+                        saveBtn.textContent = 'Erro';
+                        setTimeout(() => { saveBtn.textContent = 'Salvar'; saveBtn.disabled = false; }, 1800);
+                        alert('Erro ao salvar: ' + (err.message || 'Erro desconhecido.'));
                     }
                 });
-                tabsContainer.appendChild(tab);
+                // Exibe o foot-box animado
+                footBox.classList.remove('foot-box-show');
+                footBox.style.display = 'none';
+                setTimeout(() => {
+                    footBox.style.display = '';
+                    void footBox.offsetWidth;
+                    footBox.classList.add('foot-box-show');
+                }, 10);
             });
         }
 
