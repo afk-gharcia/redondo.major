@@ -1,18 +1,12 @@
-/**
- * @file Displays a popup for editing the player's display name in the frontend.
- * @author afk-gharcia
- * @description Provides a modal dialog for users to update their display name for the Redondo CS2 Major predictions page.
- */
+// Popup de confirmação para deletar relação stage-team
+// Uso: showConfirmDeleteStageTeam({ phase, team, onConfirm })
 
-import { editPlayer } from '../editPlayer.js';
-
-export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCustomize }) {
-  
-  const old = document.getElementById('player-edit-popup');
+export function showConfirmDeleteStageTeam({ phase, team, onConfirm }) {
+  const old = document.getElementById('stage-team-delete-popup');
   if (old) old.remove();
 
   const overlay = document.createElement('div');
-  overlay.id = 'player-edit-popup';
+  overlay.id = 'stage-team-delete-popup';
   overlay.style.position = 'fixed';
   overlay.style.top = 0;
   overlay.style.left = 0;
@@ -36,32 +30,19 @@ export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCus
   popup.style.alignItems = 'center';
 
   const title = document.createElement('h2');
-  title.textContent = 'Editar Nome';
+  title.textContent = 'Confirmar exclusão';
   title.style.color = '#ffd700';
   title.style.marginBottom = '18px';
   title.style.fontSize = '1.18em';
   title.style.fontWeight = 'bold';
   popup.appendChild(title);
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = currentName || '';
-  input.maxLength = 32;
-  input.style.fontSize = '1.08em';
-  input.style.padding = '10px 16px';
-  input.style.borderRadius = '8px';
-  input.style.border = '1.5px solid #ffd700';
-  input.style.background = '#181818';
-  input.style.color = '#ffd700';
-  input.style.marginBottom = '18px';
-  input.style.width = '100%';
-  input.style.boxSizing = 'border-box';
-  input.autofocus = true;
-  popup.appendChild(input);
-  // Permite customização do popup (ex: remover título, mudar placeholder)
-  if (typeof popupCustomize === 'function') {
-    popupCustomize(popup, input);
-  }
+  const msg = document.createElement('div');
+  msg.innerHTML = `Deseja realmente deletar a relação <b>${phase}</b> / <b>${team}</b>?`;
+  msg.style.color = '#ffd700';
+  msg.style.marginBottom = '18px';
+  msg.style.textAlign = 'center';
+  popup.appendChild(msg);
 
   const errorMsg = document.createElement('div');
   errorMsg.style.color = '#d32f2f';
@@ -85,40 +66,31 @@ export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCus
   btnCancel.style.fontWeight = 'bold';
   btnCancel.onclick = () => overlay.remove();
 
-  const btnSave = document.createElement('button');
-  btnSave.textContent = 'Salvar';
-  btnSave.style.background = '#ffd700';
-  btnSave.style.color = '#23272b';
-  btnSave.style.border = 'none';
-  btnSave.style.borderRadius = '8px';
-  btnSave.style.padding = '8px 18px';
-  btnSave.style.fontWeight = 'bold';
-  btnSave.onclick = async () => {
-    const newName = input.value.trim();
-    if (!newName) {
-      errorMsg.textContent = 'O nome não pode ser vazio.';
-      errorMsg.style.display = 'block';
-      return;
-    }
-    btnSave.disabled = true;
-    btnSave.textContent = 'Salvando...';
+  const btnDelete = document.createElement('button');
+  btnDelete.textContent = 'Deletar';
+  btnDelete.style.background = '#d32f2f';
+  btnDelete.style.color = '#fff';
+  btnDelete.style.border = 'none';
+  btnDelete.style.borderRadius = '8px';
+  btnDelete.style.padding = '8px 18px';
+  btnDelete.style.fontWeight = 'bold';
+  btnDelete.onclick = async () => {
+    btnDelete.disabled = true;
+    btnDelete.textContent = 'Deletando...';
     try {
-      if (playerId) {
-        await editPlayer({ id: playerId, display_name: newName });
-      }
-      if (typeof onSuccess === 'function') onSuccess(newName);
+      if (typeof onConfirm === 'function') await onConfirm();
       overlay.remove();
     } catch (err) {
-      errorMsg.textContent = err.message || 'Erro ao salvar.';
+      errorMsg.textContent = err.message || 'Erro ao deletar.';
       errorMsg.style.display = 'block';
     } finally {
-      btnSave.disabled = false;
-      btnSave.textContent = 'Salvar';
+      btnDelete.disabled = false;
+      btnDelete.textContent = 'Deletar';
     }
   };
 
   btnRow.appendChild(btnCancel);
-  btnRow.appendChild(btnSave);
+  btnRow.appendChild(btnDelete);
   popup.appendChild(btnRow);
 
   overlay.appendChild(popup);

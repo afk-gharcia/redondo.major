@@ -17,7 +17,6 @@ export async function loadAdmin(authentication_token) {
     throw new Error(err.error || 'Erro ao carregar dados administrativos');
   }
   const data = await res.json();
-  // DEBUG: imprimir dados administrativos no console
-  console.log('[ADMIN DATA]', data);
+  // ...
   return data;
 }

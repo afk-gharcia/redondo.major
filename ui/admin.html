@@ -79,6 +79,7 @@ async function carregarAdminDashboard() {
                     const data = await loadAdmin(pass);
                     adminData = data;
                     adminPass = pass;
+                    window.adminData = adminData;
                     // Salva no sessionStorage
                     sessionStorage.setItem('adminData', JSON.stringify(adminData));
                     sessionStorage.setItem('adminPass', pass);
@@ -98,6 +99,7 @@ async function carregarAdminDashboard() {
         try {
             const data = await loadAdmin(adminPass);
             adminData = data;
+            window.adminData = adminData;
             sessionStorage.setItem('adminData', JSON.stringify(adminData));
             msg.style.display = 'none';
             content.classList.remove('admin-content-hidden');

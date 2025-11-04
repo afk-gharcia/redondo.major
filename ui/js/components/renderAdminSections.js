@@ -15,28 +15,10 @@ export function renderAdminSections(data) {
                 <div id="admin-players-list"></div>
             </div>
             <div id="admin-tab-games" class="admin-tab-panel" style="display:none;">
-                <div class="stage-content-tab">
-                    <div class="stage-form-split">
-                        <div class="stage-form-left">
-                            <div class="stage-content-inner">
-                                <h2 class="admin-section-title" style="margin-bottom:18px;">Games</h2>
-                                <div id="admin-games-list"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="admin-games-list"></div>
             </div>
             <div id="admin-tab-stages" class="admin-tab-panel" style="display:none;">
-                <div class="stage-content-tab">
-                    <div class="stage-form-split">
-                        <div class="stage-form-left">
-                            <div class="stage-content-inner">
-                                <h2 class="admin-section-title" style="margin-bottom:18px;">Stages</h2>
-                                <div id="admin-stages-list"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="admin-stages-list"></div>
             </div>
         </div>
     `;
@@ -47,10 +29,26 @@ export function renderAdminSections(data) {
             { id: 'admin-tab-stages', label: 'Stages' }
         ];
         const tabsContainer = document.getElementById('admin-tabs');
-        // Importa função de renderização de conteúdo das seções
-        let renderAdminPlayersTable;
-        import('./renderAdminSectionContent.js').then(mod => {
+        // Importa funções de renderização diretamente dos arquivos separados
+        let renderAdminPlayersTable, renderAdminGamesTable, renderAdminStagesTable;
+        import('./renderAdminPlayersTable.js').then(mod => {
             renderAdminPlayersTable = mod.renderAdminPlayersTable;
+        });
+        import('./renderAdminGamesTable.js').then(mod => {
+            renderAdminGamesTable = mod.renderAdminGamesTable;
+            // Se a aba games já estiver ativa, renderiza imediatamente
+            const gamesTab = document.getElementById('admin-tab-games');
+            if (gamesTab && gamesTab.style.display !== 'none') {
+                renderAdminGamesTable(data.games || []);
+            }
+        });
+        import('./renderAdminStagesTable.js').then(mod => {
+            renderAdminStagesTable = mod.renderAdminStagesTable;
+            // Se a aba stages já estiver ativa, renderiza imediatamente
+            const stagesTab = document.getElementById('admin-tab-stages');
+            if (stagesTab && stagesTab.style.display !== 'none') {
+                renderAdminStagesTable(data.stages || data.teams_stage || []);
+            }
         });
         tabs.forEach((tab) => {
             const tabDiv = document.createElement('div');
@@ -75,6 +73,14 @@ export function renderAdminSections(data) {
                     // Se for Players, renderiza a tabela usando tokens_players
                     if (tab.id === 'admin-tab-players' && typeof renderAdminPlayersTable === 'function') {
                         renderAdminPlayersTable(data.tokens_players || []);
+                    }
+                    // Se for Games, renderiza a tabela usando games
+                    if (tab.id === 'admin-tab-games' && typeof renderAdminGamesTable === 'function') {
+                        renderAdminGamesTable(data.games || []);
+                    }
+                    // Se for Stages, renderiza a tabela usando stages
+                    if (tab.id === 'admin-tab-stages' && typeof renderAdminStagesTable === 'function') {
+                        renderAdminStagesTable(data.stages || data.teams_stage || []);
                     }
                 }
             };

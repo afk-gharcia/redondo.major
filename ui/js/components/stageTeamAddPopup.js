@@ -1,18 +1,12 @@
-/**
- * @file Displays a popup for editing the player's display name in the frontend.
- * @author afk-gharcia
- * @description Provides a modal dialog for users to update their display name for the Redondo CS2 Major predictions page.
- */
+// Popup para adicionar nova relação de stage e team
+// Uso: showStageTeamAddPopup({ phases, teams, onSuccess })
 
-import { editPlayer } from '../editPlayer.js';
-
-export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCustomize }) {
-  
-  const old = document.getElementById('player-edit-popup');
+export function showStageTeamAddPopup({ phases, teams, onSuccess }) {
+  const old = document.getElementById('stage-team-add-popup');
   if (old) old.remove();
 
   const overlay = document.createElement('div');
-  overlay.id = 'player-edit-popup';
+  overlay.id = 'stage-team-add-popup';
   overlay.style.position = 'fixed';
   overlay.style.top = 0;
   overlay.style.left = 0;
@@ -36,32 +30,60 @@ export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCus
   popup.style.alignItems = 'center';
 
   const title = document.createElement('h2');
-  title.textContent = 'Editar Nome';
+  title.textContent = 'Adicionar Stage/Team';
   title.style.color = '#ffd700';
   title.style.marginBottom = '18px';
   title.style.fontSize = '1.18em';
   title.style.fontWeight = 'bold';
   popup.appendChild(title);
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = currentName || '';
-  input.maxLength = 32;
-  input.style.fontSize = '1.08em';
-  input.style.padding = '10px 16px';
-  input.style.borderRadius = '8px';
-  input.style.border = '1.5px solid #ffd700';
-  input.style.background = '#181818';
-  input.style.color = '#ffd700';
-  input.style.marginBottom = '18px';
-  input.style.width = '100%';
-  input.style.boxSizing = 'border-box';
-  input.autofocus = true;
-  popup.appendChild(input);
-  // Permite customização do popup (ex: remover título, mudar placeholder)
-  if (typeof popupCustomize === 'function') {
-    popupCustomize(popup, input);
-  }
+  // Select de Stage
+  const phaseLabel = document.createElement('label');
+  phaseLabel.textContent = 'Stage:';
+  phaseLabel.style.color = '#ffd700';
+  phaseLabel.style.marginBottom = '4px';
+  phaseLabel.style.alignSelf = 'flex-start';
+  popup.appendChild(phaseLabel);
+  const phaseSelect = document.createElement('select');
+  phaseSelect.style.fontSize = '1.08em';
+  phaseSelect.style.padding = '8px 12px';
+  phaseSelect.style.borderRadius = '8px';
+  phaseSelect.style.border = '1.5px solid #ffd700';
+  phaseSelect.style.background = '#181818';
+  phaseSelect.style.color = '#ffd700';
+  phaseSelect.style.marginBottom = '18px';
+  phaseSelect.style.width = '100%';
+  phases.forEach(phase => {
+    const opt = document.createElement('option');
+    opt.value = phase.id;
+    opt.textContent = phase.phase;
+    phaseSelect.appendChild(opt);
+  });
+  popup.appendChild(phaseSelect);
+
+  // Select de Team
+  const teamLabel = document.createElement('label');
+  teamLabel.textContent = 'Team:';
+  teamLabel.style.color = '#ffd700';
+  teamLabel.style.marginBottom = '4px';
+  teamLabel.style.alignSelf = 'flex-start';
+  popup.appendChild(teamLabel);
+  const teamSelect = document.createElement('select');
+  teamSelect.style.fontSize = '1.08em';
+  teamSelect.style.padding = '8px 12px';
+  teamSelect.style.borderRadius = '8px';
+  teamSelect.style.border = '1.5px solid #ffd700';
+  teamSelect.style.background = '#181818';
+  teamSelect.style.color = '#ffd700';
+  teamSelect.style.marginBottom = '18px';
+  teamSelect.style.width = '100%';
+  teams.forEach(team => {
+    const opt = document.createElement('option');
+    opt.value = team.id;
+    opt.textContent = team.name;
+    teamSelect.appendChild(opt);
+  });
+  popup.appendChild(teamSelect);
 
   const errorMsg = document.createElement('div');
   errorMsg.style.color = '#d32f2f';
@@ -94,19 +116,17 @@ export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCus
   btnSave.style.padding = '8px 18px';
   btnSave.style.fontWeight = 'bold';
   btnSave.onclick = async () => {
-    const newName = input.value.trim();
-    if (!newName) {
-      errorMsg.textContent = 'O nome não pode ser vazio.';
+    const phaseId = phaseSelect.value;
+    const teamId = teamSelect.value;
+    if (!phaseId || !teamId) {
+      errorMsg.textContent = 'Selecione um stage e um time.';
       errorMsg.style.display = 'block';
       return;
     }
     btnSave.disabled = true;
     btnSave.textContent = 'Salvando...';
     try {
-      if (playerId) {
-        await editPlayer({ id: playerId, display_name: newName });
-      }
-      if (typeof onSuccess === 'function') onSuccess(newName);
+      if (typeof onSuccess === 'function') await onSuccess({ phaseId, teamId });
       overlay.remove();
     } catch (err) {
       errorMsg.textContent = err.message || 'Erro ao salvar.';
