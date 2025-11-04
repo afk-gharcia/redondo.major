@@ -34,7 +34,7 @@
   z-index: 10;
 }
 .foot-box {
-  /* ...existing styles... */
+
   animation: stageTabsFadeIn 0.8s cubic-bezier(.77,0,.18,1) 0s 1 normal forwards;
   opacity: 0;
 }
@@ -42,7 +42,7 @@
   opacity: 1;
   animation: stageTabsFadeIn 0.8s cubic-bezier(.77,0,.18,1) 0s 1 normal forwards;
 }
-/* Foot Box (box inferior após o stage-content-box) */
+
 .foot-box {
   background: linear-gradient(90deg, #23272b 60%, #181818 100%);
   border-radius: 22px;
@@ -151,7 +151,7 @@
 .classification-list li:last-child {
   border-bottom: none;
 }
-/* Caixa de conteúdo da fase selecionada */
+
 .stage-content-tab {
   background: linear-gradient(90deg, #23272b 60%, #181818 100%);
   border-radius: 28px;
@@ -237,7 +237,7 @@
     filter: blur(0);
   }
 }
-/* Stage Tabs (acima dos formulários de palpites) */
+
 .stage-tabs {
   display: flex;
   justify-content: center;
@@ -272,7 +272,7 @@
   box-shadow: 0 4px 24px #ffd70033, 0 1px 0 #ffd70044 inset;
   border-color: #ffd70099;
 }
-/* Acessibilidade: esconder visualmente mas manter acessível para leitores de tela */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -283,7 +283,7 @@
   clip: rect(0,0,0,0);
   border: 0;
 }
-/* Player Tab Styles */
+
 @keyframes playerTabFadeIn {
   0% {
     opacity: 0;
@@ -512,12 +512,7 @@
 	justify-content: flex-end;
 	text-align: right;
 }
-.team-btn-home {
-	text-align: left;
-}
-.team-btn-away {
-	text-align: right;
-}
+
 .team-btn-x {
 	flex: 0 0 36px;
 	min-width: 36px;
@@ -533,21 +528,21 @@
 	justify-content: center;
 	height: 28px;
 }
-/* Botão de time selecionado */
+
 .stage-form .team-btn.team-btn-selected {
 	background: #1e4023 !important;
 	color: #b6ffb6 !important;
 	border: 1.5px solid #3fa23f !important;
 	transition: background 0.2s, color 0.2s, border 0.2s;
 }
-/* Destaca o nome do time selecionado */
+
 .team-selected {
 	background: #1e4023;
 	color: #b6ffb6 !important;
 	border-radius: 5px;
 	transition: background 0.2s, color 0.2s;
 }
-/* Header de usuário acima do formulário de palpites */
+
 .user-header {
 	width: 100%;
 	max-width: 600px;

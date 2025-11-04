@@ -1,5 +1,8 @@
+/*
+  Styles specific to the regular stage box component.
+  Author: afk-gharcia
+*/
 .stage-content-tab {
-  /* Exemplo de estilos principais do box do stage */
   background: #23272b;
   border-radius: 14px;
   box-shadow: 0 2px 16px #00000022;
@@ -72,7 +75,6 @@
   color: #23272b;
 }
 
-.stage-content-tab-locked {
-  opacity: 0.6;
-  pointer-events: none;
+.stage-content-locked {
+  opacity: 0.5 !important;
 }

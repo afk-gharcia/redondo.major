@@ -1,0 +1,200 @@
+/*
+  Styles specific to the playoff stage box component.
+  Author: afk-gharcia
+*/
+.stage-divider {
+  width: 2px;
+  background: #ffd70044;
+  border-radius: 2px;
+  margin: 0 12px 0 32px;
+}
+
+.stage-content-locked {
+  opacity: 0.5 !important;
+}
+
+.stage-content-box {
+  background: linear-gradient(90deg, #23272b 60%, #181818 100%);
+  border-radius: 28px;
+  margin: 32px auto 0 auto;
+  max-width: 710px;
+  width: 100%;
+  box-shadow: 0 6px 36px #000c, 0 2px 0 #ffd70044 inset;
+  border: 2.5px solid #ffd70044;
+  border-top: 2.5px solid #ffd70099;
+  padding: 32px 0px 25px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.team-btn-playoff.team-btn-home {
+  justify-content: flex-start;
+  text-align: left;
+}
+.team-btn-playoff.team-btn-away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.team-btn-playoff {
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1.5px solid #fff;
+  background: #23272b;
+  color: #fff;
+  cursor: default;
+  transition: none;
+  min-width: 110px;
+  max-width: 160px;
+  width: 120px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  box-shadow: 0 1px 4px #0002;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-btn {
+  background: #23272b;
+  color: #ffd700;
+  border: 1.5px solid #ffd700;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0 8px;
+  padding: 0.3em 1.1em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  min-width: 38px;
+  max-width: 38px;
+  width: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.score-btn:hover, .score-btn:focus {
+  background: #ffd700;
+  color: #23272b;
+}
+
+.score-dropdown {
+  position: absolute;
+  z-index: 1000;
+  background: #23272b;
+  border: 1.5px solid #ffd700;
+  border-radius: 8px;
+  box-shadow: 0 4px 32px #000a;
+  padding: 6px 0;
+  min-width: 70px;
+  text-align: center;
+}
+.score-dropdown .score-option {
+  background: none;
+  border: none;
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 1.08em;
+  padding: 6px 0;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.score-dropdown .score-option:hover {
+  background: #ffd70022;
+}
+.stage-content-box-playoff {
+  background: #181818;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #0007;
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 18px;
+}
+.stage-content-tab-playoff {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.stage-content-tab-playoff .stage-form-split {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.stage-content-tab-playoff .stage-form-left {
+  flex: 1;
+  padding: 0 12px 0 0;
+  min-width: 360px;
+  max-width: 420px;
+}
+.stage-content-tab-playoff .stage-form-right {
+  width: 260px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.major-champion-box {
+  background: #23272b;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #0007;
+  border: 2px solid #ffd70044;
+  padding: 15px 24px;
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 1.18em;
+  margin-left: 0;
+  margin-top: 25px;
+  min-width: 180px;
+  max-width: 260px;
+  text-align: center;
+}
+.stage-content-tab-playoff .stage-form-left {
+  flex: 1;
+  padding: 0 12px 0 0;
+}
+.stage-content-tab-playoff .stage-form-right {
+  width: 260px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.stage-content-tab-playoff .classification-tables-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+}
+.stage-content-tab-playoff .classification-tables-col {
+  flex: 1;
+  padding: 0 0 0 0;
+}
+.stage-content-tab-playoff .classification-table {
+  background: #181818;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #0004;
+  margin-bottom: 18px;
+  padding: 0 0 0 0;
+}
+.stage-content-tab-playoff .classification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.stage-content-tab-playoff .classification-table {
+  background: #181818;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px #000a;
+  margin-bottom: 18px;
+  padding: 0 0 0 0;
+  min-width: 260px;
+  max-width: 380px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}

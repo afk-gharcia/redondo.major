@@ -5,12 +5,6 @@
  * Now supports tab activation, state, and callback on select.
  */
 
-/**
- * Render stage tabs and handle tab selection.
- * @param {Array} phases - Array of phase objects.
- * @param {Function} onTabSelect - Callback(phase, idx) called when a tab is selected.
- * @param {number} [initialIdx] - Index of the tab to activate initially. Se não definido, nenhuma tab é ativada.
- */
 export function renderStageTabs(phases, onTabSelect, initialIdx) {
   const tabsContainer = document.getElementById('stage-tabs');
   tabsContainer.innerHTML = '';
@@ -27,7 +21,7 @@ export function renderStageTabs(phases, onTabSelect, initialIdx) {
         activeIdx = null;
         if (onTabSelect) onTabSelect(null, null);
       } else {
-        // Desativa todas as tabs
+        
         tabsContainer.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         activeIdx = idx;
@@ -36,7 +30,6 @@ export function renderStageTabs(phases, onTabSelect, initialIdx) {
     });
     tabsContainer.appendChild(tab);
   });
-  // Só ativa tab inicial se initialIdx for um número válido
   if (typeof initialIdx === 'number' && phases[initialIdx]) {
     const initialTab = tabsContainer.children[initialIdx];
     if (initialTab) {

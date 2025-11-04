@@ -1,4 +1,3 @@
-// Centralized API base URL for all backend requests
 /**
  * @file Global configuration for frontend.
  * @author afk-gharcia

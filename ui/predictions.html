@@ -121,7 +121,7 @@
                 tabsContainer.innerHTML = '<div style="color:#ffd700;opacity:0.7;">Nenhuma fase encontrada</div>';
                 return;
             }
-            // Usa o módulo de tabs e conteúdo
+            
             renderStageTabs(phases, async (phase, idx) => {
                 if (!phase) {
                     contentBox.innerHTML = '';
@@ -129,9 +129,9 @@
                     footBox.classList.remove('foot-box-show');
                     return;
                 }
-                // Renderiza o conteúdo do stage e integra o foot-box
+                
                 await renderStageContent(phase, contentBox, phase.predictions, async () => {
-                    // Callback do botão Salvar
+                    
                     const player_id = localStorage.getItem('userId');
                     const major_phase_id = phase.major_phase_id;
                     const saveBtn = footBox.querySelector('#foot-box-save-btn');
@@ -164,7 +164,7 @@
                         alert('Erro ao salvar: ' + (err.message || 'Erro desconhecido.'));
                     }
                 });
-                // Exibe o foot-box animado
+                
                 footBox.classList.remove('foot-box-show');
                 footBox.style.display = 'none';
                 setTimeout(() => {

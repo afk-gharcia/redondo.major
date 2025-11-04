@@ -1,5 +1,8 @@
-// Popup de confirmação para deletar relação stage-team
-// Uso: showConfirmDeleteStageTeam({ phase, team, onConfirm })
+/**
+ * @file Confirm delete stage-team popup for frontend.
+ * @author afk-gharcia
+ * @description Renders and handles the confirmation popup for deleting a stage-team relation.
+ */
 
 export function showConfirmDeleteStageTeam({ phase, team, onConfirm }) {
   const old = document.getElementById('stage-team-delete-popup');

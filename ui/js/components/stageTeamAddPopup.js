@@ -1,5 +1,9 @@
-// Popup para adicionar nova relação de stage e team
-// Uso: showStageTeamAddPopup({ phases, teams, onSuccess })
+
+/**
+ * @file Stage-team add popup for frontend.
+ * @author afk-gharcia
+ * @description Renders and handles the popup for adding a team to a stage.
+ */
 
 export function showStageTeamAddPopup({ phases, teams, onSuccess }) {
   const old = document.getElementById('stage-team-add-popup');
@@ -37,7 +41,7 @@ export function showStageTeamAddPopup({ phases, teams, onSuccess }) {
   title.style.fontWeight = 'bold';
   popup.appendChild(title);
 
-  // Select de Stage
+  
   const phaseLabel = document.createElement('label');
   phaseLabel.textContent = 'Stage:';
   phaseLabel.style.color = '#ffd700';
@@ -61,7 +65,7 @@ export function showStageTeamAddPopup({ phases, teams, onSuccess }) {
   });
   popup.appendChild(phaseSelect);
 
-  // Select de Team
+  
   const teamLabel = document.createElement('label');
   teamLabel.textContent = 'Team:';
   teamLabel.style.color = '#ffd700';

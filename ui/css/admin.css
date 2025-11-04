@@ -1,4 +1,9 @@
-/* Estilo para mensagem em branco da página admin */
+/*
+  Styles specific to the admin page (admin.html).
+  Author: afk-gharcia
+*/
+
+
 .admin-blank-msg {
     padding: 48px 0;
     text-align: center;
@@ -11,11 +16,10 @@
     display: none;
 }
 
-/* Espaçamento reduzido entre player tab e tabs na admin */
+
 .player-tab {
   top: 18px !important;
 }
 .stage-tabs {
   margin-top: 32px !important;
 }
-

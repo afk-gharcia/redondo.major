@@ -1,7 +1,11 @@
-// Preenche o formulário e classificações com predictions salvas
+/**
+ * @file Prefill predictions for frontend.
+ * @author afk-gharcia
+ * @description Prefills saved predictions in the UI components for regular stages.
+ */
 export function prefillPredictions(phase, container, predictions) {
   if (!Array.isArray(predictions)) return;
-  // Preencher jogos (type: 'game')
+  
   predictions.filter(p => p.type === 'game').forEach(pred => {
     const gameIdx = phase.games.findIndex(g => g.key === pred.key);
     if (gameIdx !== -1) {
@@ -15,8 +19,7 @@ export function prefillPredictions(phase, container, predictions) {
       if (btn) btn.classList.add('team-btn-selected');
     }
   });
-  // Preencher classificações (type: 3-0, 0-3, classified)
-  // Preencher 3-0 primeiro
+  
   const pred3_0 = predictions.find(p => p.type === '3-0');
   let ids3_0 = [];
   if (pred3_0 && Array.isArray(pred3_0.value)) {
@@ -35,7 +38,7 @@ export function prefillPredictions(phase, container, predictions) {
       }
     });
   }
-  // Preencher 0-3 normalmente
+  
   const pred0_3 = predictions.find(p => p.type === '0-3');
   if (pred0_3 && Array.isArray(pred0_3.value)) {
     pred0_3.value.forEach(teamId => {
@@ -52,7 +55,7 @@ export function prefillPredictions(phase, container, predictions) {
       }
     });
   }
-  // Preencher classified removendo ids já usados em 3-0
+  
   const predClassified = predictions.find(p => p.type === 'classified');
   if (predClassified && Array.isArray(predClassified.value)) {
     const classifiedFiltered = predClassified.value.filter(teamId => !ids3_0.includes(teamId));

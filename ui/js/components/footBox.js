@@ -1,11 +1,12 @@
-// Módulo para renderizar e controlar o foot-box
-import { formatCustomDate, isPeriodOpen } from './utils.js';
 
 /**
- * Garante que o HTML base do foot-box está presente.
- * @param {HTMLElement} footBox
- * @returns {Promise<void>}
+ * @file Foot box component logic for frontend.
+ * @author afk-gharcia
+ * @description Handles rendering and updating the prediction period and save button.
  */
+
+import { formatCustomDate, isPeriodOpen } from './utils.js';
+
 export async function ensureFootBoxHtml(footBox) {
   if (!footBox.querySelector('.foot-box-period') || !footBox.querySelector('#foot-box-save-btn')) {
     const html = await fetch('components/footBox.html').then(r => r.text());
@@ -13,13 +14,7 @@ export async function ensureFootBoxHtml(footBox) {
   }
 }
 
-/**
- * Atualiza o foot-box com o texto do período e controla o botão Salvar.
- * @param {HTMLElement} footBox - Elemento do foot-box.
- * @param {string} start - Data/hora de início do período.
- * @param {string} end - Data/hora de fim do período.
- * @param {Function} onSave - Callback chamado ao clicar em Salvar.
- */
+
 export async function updateFootBox(footBox, start, end, onSave) {
   await ensureFootBoxHtml(footBox);
   let periodText = '';

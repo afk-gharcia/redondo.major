@@ -58,7 +58,7 @@ export function showPlayerEditPopup({ currentName, playerId, onSuccess, popupCus
   input.style.boxSizing = 'border-box';
   input.autofocus = true;
   popup.appendChild(input);
-  // Permite customização do popup (ex: remover título, mudar placeholder)
+  
   if (typeof popupCustomize === 'function') {
     popupCustomize(popup, input);
   }

@@ -32,17 +32,17 @@ export function renderAdminGamesTable(games) {
 	});
 	html += '</tbody></table>';
 	container.innerHTML = html;
-	// Delegação de eventos para o botão editar
+	
 	container.onclick = (e) => {
 		const btn = e.target.closest('button[id^="edit-game-btn-"]');
 		if (!btn) return;
 		const idx = parseInt(btn.id.replace('edit-game-btn-', ''));
 		const game = games[idx];
 		if (!game) return;
-		// Popup de edição de game
+		
 		const teams = (window.adminData && window.adminData.teams) || [];
 		const teamNames = teams.map(t => t.name);
-		// Cria overlay
+		
 		const overlay = document.createElement('div');
 		overlay.style.position = 'fixed';
 		overlay.style.top = 0;
@@ -54,7 +54,7 @@ export function renderAdminGamesTable(games) {
 		overlay.style.alignItems = 'center';
 		overlay.style.justifyContent = 'center';
 		overlay.style.zIndex = 9999;
-		// Popup box
+		
 		const popup = document.createElement('div');
 		popup.style.background = '#23272b';
 		popup.style.borderRadius = '18px';
@@ -65,7 +65,7 @@ export function renderAdminGamesTable(games) {
 		popup.style.display = 'flex';
 		popup.style.flexDirection = 'column';
 		popup.style.alignItems = 'center';
-		// Título
+		
 		const title = document.createElement('h2');
 		title.textContent = 'Editar Game';
 		title.style.color = '#ffd700';
@@ -73,7 +73,7 @@ export function renderAdminGamesTable(games) {
 		title.style.fontSize = '1.18em';
 		title.style.fontWeight = 'bold';
 		popup.appendChild(title);
-		// Campo key
+		
 		const keyLabel = document.createElement('label');
 		keyLabel.textContent = 'Key:';
 		keyLabel.style.color = '#ffd700';
@@ -93,7 +93,7 @@ export function renderAdminGamesTable(games) {
 		keyInput.style.width = '100%';
 		keyInput.style.boxSizing = 'border-box';
 		popup.appendChild(keyInput);
-		// Campo team 1
+		
 		const team1Label = document.createElement('label');
 		team1Label.textContent = 'Team 1:';
 		team1Label.style.color = '#ffd700';
@@ -118,7 +118,7 @@ export function renderAdminGamesTable(games) {
 			team1Select.appendChild(opt);
 		});
 		popup.appendChild(team1Select);
-		// Campo team 2
+		
 		const team2Label = document.createElement('label');
 		team2Label.textContent = 'Team 2:';
 		team2Label.style.color = '#ffd700';
@@ -143,14 +143,14 @@ export function renderAdminGamesTable(games) {
 			team2Select.appendChild(opt);
 		});
 		popup.appendChild(team2Select);
-		// Mensagem de erro
+		
 		const errorMsg = document.createElement('div');
 		errorMsg.style.color = '#d32f2f';
 		errorMsg.style.fontWeight = 'bold';
 		errorMsg.style.marginBottom = '10px';
 		errorMsg.style.display = 'none';
 		popup.appendChild(errorMsg);
-		// Botões
+		
 		const btnRow = document.createElement('div');
 		btnRow.style.display = 'flex';
 		btnRow.style.gap = '12px';
@@ -182,7 +182,7 @@ export function renderAdminGamesTable(games) {
 				return;
 			}
 			if (newTeam1 === newTeam2) {
-				// Permite ambos iguais apenas se ambos forem id 0
+				
 				const team1Obj = teams.find(t => t.name === newTeam1);
 				const team2Obj = teams.find(t => t.name === newTeam2);
 				if (!(team1Obj && team2Obj && String(team1Obj.id) === '0' && String(team2Obj.id) === '0')) {
@@ -194,7 +194,7 @@ export function renderAdminGamesTable(games) {
 			btnSave.disabled = true;
 			btnSave.textContent = 'Salvando...';
 			try {
-				// Descobrir os ids dos times pelo nome
+				
 				const team1Obj = teams.find(t => t.name === newTeam1);
 				const team2Obj = teams.find(t => t.name === newTeam2);
 				if (!team1Obj || !team2Obj) throw new Error('Times inválidos');
@@ -224,7 +224,7 @@ export function renderAdminGamesTable(games) {
 		overlay.appendChild(popup);
 		document.body.appendChild(overlay);
 	};
-	// Animação fade-in igual ao padrão
+	
 	const table = container.querySelector('table.admin-games-table');
 	if (table) {
 		table.style.opacity = '0';

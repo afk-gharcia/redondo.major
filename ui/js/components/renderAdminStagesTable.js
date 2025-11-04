@@ -1,7 +1,9 @@
-// Renderiza a tabela de stages na área #admin-stages-list
-// Uso: renderAdminStagesTable(teams_stage)
-// teams_stage: array de objetos { phase, name }
-
+/**
+ * @file Renders admin stages table for frontend.
+ * @author afk-gharcia
+ * @description Renders and manages the admin stages table and add/delete popups.
+ */
+ 
 export function renderAdminStagesTable(teams_stage) {
     const container = document.getElementById('admin-stages-list');
     if (!container) return;
@@ -33,32 +35,32 @@ export function renderAdminStagesTable(teams_stage) {
     html += '</tbody></table>';
     container.innerHTML = html;
 
-    // Delegação de eventos para deletar
+    
     container.onclick = async (e) => {
         const btn = e.target.closest('button[id^="delete-stage-team-btn-"]');
         if (!btn) return;
         const idx = parseInt(btn.id.replace('delete-stage-team-btn-', ''));
         const item = teams_stage[idx];
         if (!item) return;
-        // Importa popup de confirmação
+        
         const { showConfirmDeleteStageTeam } = await import('./confirmDeleteStageTeam.js');
         showConfirmDeleteStageTeam({
             phase: item.phase,
             team: item.name,
             onConfirm: async () => {
-                // Descobrir phase_id e team_id
+                
                 let phase_id = null, team_id = null;
-                // Buscar pelo nome e phase no adminData
+                
                 if (window.adminData) {
-                    // Descobre phase_id pelo nome
+                    
                     const phaseObj = (window.adminData.games || []).find(g => g.phase === item.phase);
                     phase_id = phaseObj ? (phaseObj.phase_id || phaseObj.major_phase_id) : null;
-                    // Descobre team_id pelo nome
+                    
                     const teamObj = (window.adminData.teams || []).find(t => t.name === item.name);
                     team_id = teamObj ? teamObj.id : null;
                 }
                 if (!phase_id || !team_id) throw new Error('IDs não encontrados');
-                // Chama endpoint DELETE
+                
                 const res = await fetch('https://redondo-major.vercel.app/api/majorTeams', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
@@ -66,7 +68,7 @@ export function renderAdminStagesTable(teams_stage) {
                 });
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.error || 'Erro ao deletar relação');
-                // Atualiza a tabela
+                
                 if (typeof window.carregarAdminDashboard === 'function') {
                     await window.carregarAdminDashboard();
                 } else {
@@ -75,7 +77,7 @@ export function renderAdminStagesTable(teams_stage) {
             }
         });
     };
-    // Botão + New Line
+   
     const btn = document.createElement('button');
     btn.textContent = '+ New Line';
     btn.style.background = '#ffd700';
@@ -87,11 +89,11 @@ export function renderAdminStagesTable(teams_stage) {
     btn.style.margin = '18px auto 0 auto';
     btn.style.display = 'block';
     btn.onclick = async () => {
-        // Importa popup dinamicamente
+        
         const { showStageTeamAddPopup } = await import('./stageTeamAddPopup.js');
-        // Extrai phases e teams do window.adminData
+        
         const teams = (window.adminData && window.adminData.teams) || [];
-        // Fases: extrair de games, pegar {id, phase} únicos
+        
         let phases = [];
         if (window.adminData && Array.isArray(window.adminData.games)) {
             const seen = new Set();
@@ -102,13 +104,13 @@ export function renderAdminStagesTable(teams_stage) {
                 }
             });
         }
-        // Ordena por id
+        
         phases = phases.sort((a, b) => a.id - b.id);
         showStageTeamAddPopup({
             phases,
             teams,
             onSuccess: async ({ phaseId, teamId }) => {
-                // POST para /api/majorTeams
+                
                 try {
                     const res = await fetch('https://redondo-major.vercel.app/api/majorTeams', {
                         method: 'POST',
@@ -117,7 +119,7 @@ export function renderAdminStagesTable(teams_stage) {
                     });
                     const data = await res.json();
                     if (!res.ok || !data.success) throw new Error(data.error || 'Erro ao adicionar relação');
-                    // Atualiza a tabela: recarrega adminData (simples: reload page, ou trigger recarregar)
+                    
                     if (typeof window.carregarAdminDashboard === 'function') {
                         await window.carregarAdminDashboard();
                     } else {
@@ -130,7 +132,7 @@ export function renderAdminStagesTable(teams_stage) {
         });
     };
     container.appendChild(btn);
-    // Animação fade-in
+    
     const table = container.querySelector('table.admin-stages-table');
     if (table) {
         table.style.opacity = '0';

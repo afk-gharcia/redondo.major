@@ -1,3 +1,7 @@
+/*
+  Styles specific to the foot box component.
+  Author: afk-gharcia
+*/
 .foot-box-row {
   display: flex;
   justify-content: space-between;

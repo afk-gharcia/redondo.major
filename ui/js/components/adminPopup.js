@@ -1,5 +1,8 @@
-// Popup para solicitar o ADMIN PASS ao usuário
-// Inspirado no visual do playerEditPopup.js
+/**
+   * @file Admin password popup for frontend.
+   * @author afk-gharcia
+   * @description Renders and handles the admin password authentication popup.
+   */
 
 export function showAdminPassPopup({ onSubmit }) {
   const old = document.getElementById('admin-pass-popup');
@@ -99,7 +102,7 @@ export function showAdminPassPopup({ onSubmit }) {
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
-  // Animação de fade e scale ao aparecer
+  
   setTimeout(() => {
     overlay.style.opacity = '1';
     popup.style.transform = 'scale(1)';

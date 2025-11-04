@@ -1,13 +1,11 @@
-// Função para carregar dados administrativos do endpoint /api/admin
-// Requer authentication_token
+/**
+ * @file Loads administrative data for the frontend.
+ * @author afk-gharcia
+ * @description Fetches admin data from the backend using an authentication token.
+ */
 
 import { API_BASE_URL } from './config.js';
 
-/**
- * Carrega os dados administrativos do backend.
- * @param {string} authentication_token - Token de autenticação de admin
- * @returns {Promise<Object>} - Dados retornados do endpoint admin
- */
 export async function loadAdmin(authentication_token) {
   if (!authentication_token) throw new Error('authentication_token é obrigatório');
   const url = `${API_BASE_URL}/api/admin?authentication_token=${encodeURIComponent(authentication_token)}`;
@@ -17,6 +15,6 @@ export async function loadAdmin(authentication_token) {
     throw new Error(err.error || 'Erro ao carregar dados administrativos');
   }
   const data = await res.json();
-  // ...
+ 
   return data;
 }

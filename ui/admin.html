@@ -1,7 +1,7 @@
 <!--
     Admin page for Redondo CS2 Major.
     Author: afk-gharcia
-    Blank admin dashboard with consistent style and navigation.
+    Admin dashboard with consistent style and navigation.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -36,7 +36,7 @@
         let adminData = null;
 let adminPass = null;
 
-// Tenta restaurar adminData e adminPass do sessionStorage
+
 try {
     const storedData = sessionStorage.getItem('adminData');
     if (storedData) {
@@ -52,12 +52,12 @@ try {
 }
 
 async function carregarAdminDashboard() {
-    // Exibe o player tab se houver nome salvo
+    
     const displayName = localStorage.getItem('display_name');
     if (displayName) {
         showPlayerTab(displayName, {
             onLogout: () => {
-                // Resetar adminData, adminPass e sessionStorage ao fazer logout
+                
                 adminData = null;
                 adminPass = null;
                 sessionStorage.removeItem('adminData');
@@ -71,7 +71,7 @@ async function carregarAdminDashboard() {
     const msg = document.getElementById('admin-msg');
     const content = document.getElementById('admin-content');
     if (!adminPass) {
-        // Não há adminPass salvo, pede senha
+        
         showAdminPassPopup({
             onSubmit: async (pass, { error, close }) => {
                 msg.textContent = 'Carregando dados administrativos...';
@@ -80,7 +80,7 @@ async function carregarAdminDashboard() {
                     adminData = data;
                     adminPass = pass;
                     window.adminData = adminData;
-                    // Salva no sessionStorage
+                    
                     sessionStorage.setItem('adminData', JSON.stringify(adminData));
                     sessionStorage.setItem('adminPass', pass);
                     close();
@@ -94,7 +94,7 @@ async function carregarAdminDashboard() {
             }
         });
     } else {
-        // Sempre recarrega os dados do backend usando o adminPass salvo
+        
         msg.textContent = 'Carregando dados administrativos...';
         try {
             const data = await loadAdmin(adminPass);
@@ -105,7 +105,7 @@ async function carregarAdminDashboard() {
             content.classList.remove('admin-content-hidden');
             renderAdminSections(adminData);
         } catch (err) {
-            // Se falhar, remove adminPass e força novo login
+            
             sessionStorage.removeItem('adminPass');
             sessionStorage.removeItem('adminData');
             adminData = null;

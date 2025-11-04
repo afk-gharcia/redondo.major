@@ -1,4 +1,10 @@
-// Exibe o player tab no topo da página
+
+/**
+ * @file Player tab component for frontend.
+ * @author afk-gharcia
+ * @description Renders and manages the player tab, including edit and logout actions.
+ */
+
 export function showPlayerTab(name, { onLogout, onEdit } = {}) {
 	const playerTab = document.getElementById('player-tab');
 	if (!name) {
@@ -35,7 +41,7 @@ export function showPlayerTab(name, { onLogout, onEdit } = {}) {
 		if (typeof onEdit === 'function') {
 			onEdit();
 		} else {
-			// Importa dinamicamente o popup se não foi passado handler
+			
 			const mod = await import('./playerEditPopup.js');
 			const playerId = localStorage.getItem('userId');
 			const currentName = localStorage.getItem('display_name') || '';

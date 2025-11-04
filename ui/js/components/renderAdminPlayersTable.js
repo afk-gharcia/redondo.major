@@ -1,10 +1,10 @@
-
+/**
+ * @file Renders admin players table for frontend.
+ * @author afk-gharcia
+ * @description Renders and manages the admin players table and player edit popup.
+ */
 import { API_BASE_URL } from '../config.js';
 
-/**
- * Renderiza a tabela de players na área #admin-players-list
- * @param {Array} players - Array de objetos player vindos do backend
- */
 export function renderAdminPlayersTable(players) {
 	const container = document.getElementById('admin-players-list');
 	if (!container) return;
@@ -61,7 +61,7 @@ export function renderAdminPlayersTable(players) {
 	html += '</tbody></table>';
 	html += '<div style="text-align:center;margin-top:18px;"><button id="admin-new-player-btn" style="background:#ffd700;color:#23272b;font-weight:bold;font-size:1.08em;padding:10px 28px;border-radius:10px;border:none;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">+ New Player</button></div>';
 	container.innerHTML = html;
-	// Adiciona animação de fade-in igual ao content
+	
 	const table = container.querySelector('table.admin-players-table');
 	if (table) {
 		table.style.opacity = '0';
@@ -74,7 +74,7 @@ export function renderAdminPlayersTable(players) {
 		newPlayerBtn.style.animation = 'stageTabsFadeIn 0.8s cubic-bezier(.77,0,.18,1) 0.1s 1 normal forwards';
 		setTimeout(() => { newPlayerBtn.style.opacity = '1'; }, 900);
 		newPlayerBtn.onclick = () => {
-			// Popup estilo showPlayerEditPopup, mas sem título e com placeholder customizado
+			
 			import('./playerEditPopup.js').then(({ showPlayerEditPopup }) => {
 				showPlayerEditPopup({
 					currentName: '',
@@ -93,7 +93,7 @@ export function renderAdminPlayersTable(players) {
 						}
 					},
 					popupCustomize: (popup, input) => {
-						// Remove o título se existir
+						
 						const h2 = popup.querySelector('h2');
 						if (h2) h2.remove();
 						input.placeholder = 'new player';
@@ -102,7 +102,7 @@ export function renderAdminPlayersTable(players) {
 			});
 		};
 	}
-	// Adiciona funcionalidade de mostrar/esconder token e deletar player
+	
 	players.forEach((player, idx) => {
 		const tokenId = `token-cell-${idx}`;
 		const eyeId = `eye-btn-${idx}`;
@@ -120,7 +120,7 @@ export function renderAdminPlayersTable(players) {
 		}
 		if (delBtn) {
 			delBtn.onclick = () => {
-				// Popup de confirmação
+				
 				const overlay = document.createElement('div');
 				overlay.style.position = 'fixed';
 				overlay.style.top = 0;

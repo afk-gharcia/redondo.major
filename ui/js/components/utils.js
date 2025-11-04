@@ -1,4 +1,8 @@
-// Funções utilitárias para predictions
+/**
+ * @file Utility functions for frontend.
+ * @author afk-gharcia
+ * @description Provides date formatting and period checking utilities for predictions.
+ */
 
 export function formatCustomDate(date) {
   const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
