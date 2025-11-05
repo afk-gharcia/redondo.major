@@ -8,7 +8,7 @@ import { API_BASE_URL } from './config.js';
 
 export async function loadLeaderboard() {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/leaderboard`);
+  const res = await fetch(`${API_BASE_URL}/api/leaderboard?force_refresh=1`);
     if (!res.ok) throw new Error('Erro ao buscar leaderboard');
     const data = await res.json();
     if (!data.success || !Array.isArray(data.leaderboard)) throw new Error('Formato inesperado de resposta do leaderboard');
